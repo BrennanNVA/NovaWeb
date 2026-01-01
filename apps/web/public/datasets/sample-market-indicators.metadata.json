@@ -1,0 +1,30 @@
+{
+  "slug": "sample-market-indicators",
+  "title": "Sample Market Indicators",
+  "summary": "A small, public demo dataset showing simple market indicators and a reproducibility artifact set.",
+  "updatedAt": "2025-12-20",
+  "license": "CC BY 4.0",
+  "files": {
+    "data": "/datasets/sample-market-indicators.csv",
+    "metadata": "/datasets/sample-market-indicators.metadata.json"
+  },
+  "schema": {
+    "columns": ["date", "ticker", "close", "volume"],
+    "types": {
+      "date": "date",
+      "ticker": "string",
+      "close": "number",
+      "volume": "integer"
+    }
+  },
+  "sources": [
+    {
+      "label": "Example Source",
+      "href": "https://example.com"
+    }
+  ],
+  "provenance": {
+    "generatedBy": "Nova Aetus demo generator",
+    "notes": "This is a sample dataset used for demonstration and documentation examples."
+  }
+}

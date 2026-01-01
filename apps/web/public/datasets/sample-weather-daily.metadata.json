@@ -1,0 +1,34 @@
+{
+  "slug": "sample-weather-daily",
+  "title": "Sample Weather Daily",
+  "summary": "A small, public demo dataset of daily observations with a companion provenance file.",
+  "updatedAt": "2025-12-31",
+  "license": "CC BY 4.0",
+  "files": {
+    "data": "/datasets/sample-weather-daily.csv",
+    "metadata": "/datasets/sample-weather-daily.metadata.json"
+  },
+  "schema": {
+    "columns": ["date", "city", "tmax_c", "tmin_c"],
+    "types": {
+      "date": "date",
+      "city": "string",
+      "tmax_c": "number",
+      "tmin_c": "number"
+    }
+  },
+  "sources": [
+    {
+      "label": "Example Source A",
+      "href": "https://example.com"
+    },
+    {
+      "label": "Example Source B",
+      "href": "https://example.com"
+    }
+  ],
+  "provenance": {
+    "generatedBy": "Nova Aetus demo generator",
+    "notes": "This is a sample dataset used for demonstration and documentation examples."
+  }
+}
