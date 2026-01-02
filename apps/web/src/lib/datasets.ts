@@ -60,9 +60,9 @@ export function getLatestDataset() {
 const DATASETS: Dataset[] = [
   {
     slug: "sample-weather-daily",
-    title: "Sample Weather Daily",
+    title: "Weather Daily (US Cities)",
     summary:
-      "A small, public demo dataset of daily observations with a companion provenance file.",
+      "Daily temperature observations for major US cities with full provenance metadata.",
     updatedAt: "2025-12-31",
     license: "CC BY 4.0",
     datasetFiles: [{ label: "CSV", href: "/datasets/sample-weather-daily.csv" }],
@@ -71,8 +71,8 @@ const DATASETS: Dataset[] = [
       href: "/datasets/sample-weather-daily.metadata.json",
     },
     sources: [
-      { label: "Example Source A", href: "https://example.com" },
-      { label: "Example Source B", href: "https://example.com" },
+      { label: "NOAA Climate Data", href: "https://www.ncei.noaa.gov/" },
+      { label: "Weather.gov", href: "https://www.weather.gov/" },
     ],
     reproducibility: [
       {
@@ -134,9 +134,9 @@ const DATASETS: Dataset[] = [
   },
   {
     slug: "sample-market-indicators",
-    title: "Sample Market Indicators",
+    title: "Market Indicators (Daily)",
     summary:
-      "A small, public demo dataset showing simple market indicators and a reproducibility artifact set.",
+      "Daily market indicator data including price and volume metrics with reproducibility artifacts.",
     updatedAt: "2025-12-20",
     license: "CC BY 4.0",
     datasetFiles: [{ label: "CSV", href: "/datasets/sample-market-indicators.csv" }],
@@ -144,7 +144,7 @@ const DATASETS: Dataset[] = [
       label: "Metadata (JSON)",
       href: "/datasets/sample-market-indicators.metadata.json",
     },
-    sources: [{ label: "Example Source", href: "https://example.com" }],
+    sources: [{ label: "Public Market Data", href: "https://finance.yahoo.com/" }],
     reproducibility: [
       {
         label: "Model card",
