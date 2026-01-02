@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { ArrowLeft, Calendar, TrendingUp } from "lucide-react"
 
 import { getPublishedArticleBySlug } from "@/lib/articles"
+import { MarkdownRenderer } from "@/components/markdown-renderer"
 
 export const dynamic = "force-dynamic"
 
@@ -83,20 +84,20 @@ export default async function NewsArticlePage({
       </header>
 
       <article className="mt-8 rounded-3xl border border-border bg-surface/80 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] sm:p-8">
-        <div className="prose prose-invert max-w-none">
-          <pre className="whitespace-pre-wrap text-sm leading-7 text-foreground font-sans">
-{article.body_markdown}
-          </pre>
-        </div>
+        <MarkdownRenderer content={article.body_markdown} />
       </article>
 
       {article.tags && article.tags.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <span className="text-sm text-foreground-muted">Tags:</span>
           {article.tags.map((tag) => (
-            <span key={tag} className="rounded-full border border-border-subtle bg-background/40 px-3 py-1 text-xs text-foreground-muted">
+            <Link
+              key={tag}
+              href={`/news?q=${encodeURIComponent(tag)}`}
+              className="rounded-full border border-border-subtle bg-background/40 px-3 py-1 text-xs text-foreground-muted hover:border-accent/30 hover:text-accent transition-colors"
+            >
               {tag}
-            </span>
+            </Link>
           ))}
         </div>
       )}
