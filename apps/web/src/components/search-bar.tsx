@@ -16,16 +16,8 @@ export function SearchBar({
 }: SearchBarProps) {
   const [query, setQuery] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (onSearch && query.trim()) {
-      onSearch(query.trim())
-    }
-  }
-
   return (
-    <form 
-      onSubmit={handleSubmit} 
+    <div 
       className={`relative ${className}`}
       role="search"
       aria-label="Search financial data"
@@ -39,11 +31,19 @@ export function SearchBar({
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              if (onSearch && query.trim()) {
+                onSearch(query.trim())
+              }
+            }
+          }}
           placeholder={placeholder}
           className="w-full rounded-lg border border-[#3a3a3a] bg-[#2B2B2B] py-3 pl-12 pr-4 text-sm text-[#ededed] placeholder-[#ededed]/40 transition-colors focus:border-[#0A9D8F] focus:outline-none focus:ring-2 focus:ring-[#0A9D8F]/20"
           aria-label="Search input"
         />
       </div>
-    </form>
+    </div>
   )
 }
