@@ -97,7 +97,7 @@ export default function AboutPage() {
           </div>
         </div>
         <p className="mt-6 text-sm text-foreground-muted">
-          This section is a placeholder—add your preferred contact method here.
+          Interested in partnering? Reach out via our social channels or through the contact form on our website.
         </p>
       </section>
     </div>
