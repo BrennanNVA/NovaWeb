@@ -21,7 +21,7 @@ export function NewsArticleCard({ article, size = "md", className = "" }: NewsAr
   return (
     <Link
       href={`/news/${article.slug}`}
-      className={`group relative block overflow-hidden rounded-3xl border border-border bg-surface/80 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur transition hover:border-accent/35 hover:shadow-[0_0_0_1px_rgba(44,254,210,0.12),0_0_80px_rgba(44,254,210,0.06)] ${density} ${className}`}
+      className={`group relative block overflow-hidden rounded-3xl border border-border bg-surface/80 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur transition hover:border-accent/35 hover:shadow-[0_0_0_1px_rgba(212,212,212,0.12),0_0_80px_rgba(212,212,212,0.06)] ${density} ${className}`}
       aria-label={article.title}
     >
       <div className="flex items-start justify-between gap-6">

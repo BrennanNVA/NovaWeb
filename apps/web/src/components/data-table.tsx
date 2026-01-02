@@ -53,12 +53,12 @@ export function DataTable<T extends Record<string, unknown>>({
     <div className={`overflow-x-auto ${className}`}>
       <table className="w-full border-collapse" role="table" aria-label="Data table">
         <thead>
-          <tr className="border-b border-[#3a3a3a] bg-[#2B2B2B]">
+          <tr className="border-b border-border bg-surface">
             {columns.map((column) => (
               <th
                 key={column.key}
-                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[#ededed]/80 ${
-                  column.sortable ? "cursor-pointer select-none hover:bg-[#333333]" : ""
+                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-foreground-muted ${
+                  column.sortable ? "cursor-pointer select-none hover:bg-surface-elevated" : ""
                 } ${column.className || ""}`}
                 onClick={() => column.sortable && handleSort(column.key)}
                 role="columnheader"
@@ -76,12 +76,12 @@ export function DataTable<T extends Record<string, unknown>>({
                     <span className="inline-flex" aria-hidden="true">
                       {sortKey === column.key ? (
                         sortDirection === "asc" ? (
-                          <ChevronUp className="h-4 w-4 text-[#0A9D8F]" />
+                          <ChevronUp className="h-4 w-4 text-accent" />
                         ) : (
-                          <ChevronDown className="h-4 w-4 text-[#0A9D8F]" />
+                          <ChevronDown className="h-4 w-4 text-accent" />
                         )
                       ) : (
-                        <ArrowUpDown className="h-4 w-4 text-[#ededed]/40" />
+                        <ArrowUpDown className="h-4 w-4 text-foreground-muted" />
                       )}
                     </span>
                   )}
@@ -94,13 +94,13 @@ export function DataTable<T extends Record<string, unknown>>({
           {sortedData.map((row) => (
             <tr
               key={keyExtractor(row)}
-              className="border-b border-[#3a3a3a] transition-colors hover:bg-[#333333]"
+              className="border-b border-border transition-colors hover:bg-surface-elevated"
               role="row"
             >
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className={`px-4 py-3 text-sm text-[#ededed] ${column.className || ""}`}
+                  className={`px-4 py-3 text-sm text-foreground ${column.className || ""}`}
                   role="cell"
                 >
                   {column.render
@@ -113,7 +113,7 @@ export function DataTable<T extends Record<string, unknown>>({
         </tbody>
       </table>
       {sortedData.length === 0 && (
-        <div className="py-8 text-center text-sm text-[#ededed]/60" role="status">
+        <div className="py-8 text-center text-sm text-foreground-muted" role="status">
           No data available
         </div>
       )}

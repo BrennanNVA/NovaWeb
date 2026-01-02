@@ -136,7 +136,7 @@ export function CommandK({ className = "" }: CommandKProps) {
           }}
         >
           <div className="w-full max-w-2xl">
-            <div className="rounded-3xl border border-border bg-surface/90 shadow-[0_0_0_1px_rgba(44,254,210,0.08)] backdrop-blur">
+            <div className="rounded-3xl border border-border bg-surface/90 shadow-[0_0_0_1px_rgba(212,212,212,0.08)] backdrop-blur">
               <div className="flex items-center gap-3 px-5 py-4">
                 <Search className="h-5 w-5 text-foreground-muted" aria-hidden="true" />
                 <input

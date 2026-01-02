@@ -15,12 +15,12 @@ export default function ResearchPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <header className="max-w-3xl">
         <div className="flex items-center gap-3 mb-4">
-          <Database className="h-7 w-7 text-[#0A9D8F]" aria-hidden="true" />
-          <h1 className="text-3xl font-semibold tracking-tight text-[#ededed] sm:text-4xl">
+          <Database className="h-7 w-7 text-accent" aria-hidden="true" />
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Research & Datasets
           </h1>
         </div>
-        <p className="mt-3 text-lg leading-8 text-[#ededed]/80">
+        <p className="mt-3 text-lg leading-8 text-foreground-muted">
           Open-source financial datasets and quantitative research with clear licensing and reproducibility.
         </p>
       </header>
@@ -30,25 +30,25 @@ export default function ResearchPage() {
           <Link
             key={dataset.slug}
             href={`/research/${dataset.slug}`}
-            className="block rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm transition hover:border-[#0A9D8F]/50 hover:shadow-md"
+            className="block rounded-xl border border-border bg-surface p-6 transition hover:border-accent/50 hover:bg-surface-elevated"
           >
             <div className="flex items-start justify-between gap-6">
               <div className="flex-1">
-                <h2 className="text-base font-semibold text-[#ededed]">
+                <h2 className="text-base font-semibold text-foreground">
                   {dataset.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
+                <p className="mt-2 text-sm leading-6 text-foreground-muted">
                   {dataset.summary}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full border border-[#3a3a3a] bg-[#111111] px-3 py-1 text-xs text-[#ededed]/60">
+              <span className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground-muted">
                 Updated {dataset.updatedAt}
               </span>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[#ededed]/60">
-              <span className="rounded-full border border-[#3a3a3a] px-3 py-1">License {dataset.license}</span>
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-foreground-muted">
+              <span className="rounded-full border border-border px-3 py-1">License {dataset.license}</span>
               {dataset.datasetFiles.map((file) => (
-                <span key={file.label} className="rounded-full bg-[#0A9D8F]/20 px-3 py-1 text-[#0A9D8F]">
+                <span key={file.label} className="rounded-full bg-accent/20 px-3 py-1 text-accent">
                   {file.label}
                 </span>
               ))}

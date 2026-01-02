@@ -97,15 +97,13 @@ export function AdsterraNativeBanner({
     <section
       aria-label={label}
       className={cn(
-        "relative w-full max-w-[728px] overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm",
-        "dark:border-zinc-800 dark:bg-zinc-950",
+        "relative w-full overflow-hidden rounded-lg border border-border bg-surface-elevated",
         className,
       )}
-      style={{ aspectRatio: "4 / 1" }}
     >
-      <div id={containerId} className="h-full w-full" />
+      <div id={containerId} className="min-h-[90px] w-full" />
       {!allowsAds ? (
-        <span className="pointer-events-none absolute inset-0 flex items-center justify-center px-3 text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center px-3 text-xs text-foreground-muted">
           {label}
         </span>
       ) : null}
