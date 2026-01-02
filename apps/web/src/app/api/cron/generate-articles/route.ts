@@ -7,6 +7,8 @@ import {
   getNextActiveTicker,
   touchTickerLastArticleAt,
 } from "@/lib/articles"
+import { fetchMarketSnapshot, type MarketSnapshot } from "@/lib/alpaca"
+import { generateArticleContent } from "@/lib/gemini"
 
 export const runtime = "nodejs"
 
@@ -79,19 +81,47 @@ export async function POST(request: Request) {
   try {
     const publishedAt = now.toISOString()
     const slug = createArticleSlug({ symbol, now })
-    const date = publishedAt.slice(0, 10)
-    const title = `${symbol} Market Update — ${date}`
 
-    const excerpt = isBreaking
-      ? `Breaking update for ${symbol}.`
-      : `Routine market update for ${symbol}.`
+    let title: string
+    let excerpt: string
+    let bodyMarkdown: string
+    let tags: string[] = ["market-update"]
+    let model: string | null = null
+    let promptVersion: string = "v0"
+    let marketSnapshot: MarketSnapshot | null = null
 
-    const bodyMarkdown = buildPlaceholderMarkdown({
-      title,
-      symbol,
-      publishedAt,
-      isBreaking,
-    })
+    const hasAlpacaKeys = process.env.ALPACA_API_KEY && process.env.ALPACA_API_SECRET
+    const hasGeminiKey = process.env.GEMINI_API_KEY
+
+    if (hasAlpacaKeys && hasGeminiKey) {
+      try {
+        marketSnapshot = await fetchMarketSnapshot({ symbol })
+        
+        const generated = await generateArticleContent({
+          symbol,
+          snapshot: marketSnapshot,
+          isBreaking,
+        })
+
+        title = generated.title
+        excerpt = generated.excerpt
+        bodyMarkdown = generated.bodyMarkdown
+        tags = generated.tags
+        model = generated.model
+        promptVersion = generated.promptVersion
+      } catch (aiError) {
+        console.error("AI generation failed, falling back to placeholder:", aiError)
+        const date = publishedAt.slice(0, 10)
+        title = `${symbol} Market Update — ${date}`
+        excerpt = isBreaking ? `Breaking update for ${symbol}.` : `Routine market update for ${symbol}.`
+        bodyMarkdown = buildPlaceholderMarkdown({ title, symbol, publishedAt, isBreaking })
+      }
+    } else {
+      const date = publishedAt.slice(0, 10)
+      title = `${symbol} Market Update — ${date}`
+      excerpt = isBreaking ? `Breaking update for ${symbol}.` : `Routine market update for ${symbol}.`
+      bodyMarkdown = buildPlaceholderMarkdown({ title, symbol, publishedAt, isBreaking })
+    }
 
     const { article } = await createPublishedArticle({
       slug,
@@ -99,12 +129,12 @@ export async function POST(request: Request) {
       excerpt,
       bodyMarkdown,
       tickers: [symbol],
-      tags: ["market-update"],
+      tags,
       isBreaking,
-      model: null,
-      promptVersion: "v0",
-      marketSnapshot: null,
-      sourceNews: null,
+      model,
+      promptVersion,
+      marketSnapshot,
+      sourceNews: marketSnapshot?.news ?? null,
       publishedAt,
     })
 
@@ -113,6 +143,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       created: true,
+      aiGenerated: !!(hasAlpacaKeys && hasGeminiKey && model),
       article: {
         id: article.id,
         slug: article.slug,
