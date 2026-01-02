@@ -33,7 +33,7 @@ export async function generateArticleContent({
   isBreaking?: boolean
 }): Promise<GeneratedArticle> {
   const client = getGeminiClient()
-  const model = client.getGenerativeModel({ model: "gemini-1.5-flash" })
+  const model = client.getGenerativeModel({ model: "gemini-2.0-flash" })
 
   const newsContext = snapshot.news
     .slice(0, 3)
@@ -102,7 +102,7 @@ The tags should be relevant categories like "earnings", "tech-sector", "market-a
     excerpt: parsed.excerpt || `Market analysis for ${symbol}.`,
     bodyMarkdown: parsed.body || text,
     tags: parsed.tags || ["market-update"],
-    model: "gemini-1.5-flash",
+    model: "gemini-2.0-flash",
     promptVersion: "v1",
   }
 }
