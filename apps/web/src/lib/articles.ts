@@ -3,17 +3,27 @@ import "server-only"
 import { createPublicSupabaseClient } from "@/lib/supabase/public-client"
 import { createServiceSupabaseClient } from "@/lib/supabase/service-client"
 
-export async function getPublishedArticles({ limit }: GetPublishedArticlesArgs) {
+export async function getPublishedArticles({ limit, query, ticker }: GetPublishedArticlesArgs) {
   if (limit <= 0) return { articles: [] }
 
   const supabase = createPublicSupabaseClient()
 
-  const { data, error } = await supabase
+  const cleanedQuery = query?.trim().replace(/,/g, " ")
+  const cleanedTicker = ticker?.trim()
+
+  let request = supabase
     .from("articles")
     .select("id, slug, title, excerpt, tickers, tags, is_breaking, published_at")
     .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(limit)
+
+  if (cleanedTicker) request = request.contains("tickers", [cleanedTicker])
+
+  if (cleanedQuery && cleanedQuery.length >= 2) {
+    const like = `%${cleanedQuery}%`
+    request = request.or(`title.ilike.${like},excerpt.ilike.${like}`)
+  }
+
+  const { data, error } = await request.order("published_at", { ascending: false }).limit(limit)
 
   if (error) throw new Error(`Failed to fetch published articles: ${error.message}`)
 
@@ -156,6 +166,8 @@ function getUtcDayRange({ now }: { now: Date }) {
 
 interface GetPublishedArticlesArgs {
   limit: number
+  query?: string
+  ticker?: string
 }
 
 interface GetPublishedArticleBySlugArgs {

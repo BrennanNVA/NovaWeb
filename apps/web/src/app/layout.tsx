@@ -31,9 +31,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full dark">
       <body
-        className={`${inter.variable} ${geistMono.variable} min-h-screen bg-[#0d0d0d] font-sans text-[#e5e5e5] antialiased`}
+        className={`${inter.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
         <a
           href="#content"

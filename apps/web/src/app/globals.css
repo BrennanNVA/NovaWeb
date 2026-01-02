@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #0d0d0d;
-  --surface: #1a1a1a;
-  --surface-elevated: #242424;
-  --foreground: #e5e5e5;
-  --foreground-muted: #a3a3a3;
-  --accent: #00bfa5;
-  --accent-hover: #00d4b8;
-  --border: #2a2a2a;
-  --border-hover: #3a3a3a;
+  --background: #0a0a0a;
+  --surface: #141414;
+  --surface-elevated: #1b1b1b;
+  --foreground: #ededed;
+  --foreground-muted: rgba(237, 237, 237, 0.68);
+  --accent: #2cfed2;
+  --accent-blue: #4c7dff;
+  --positive: #2fae84;
+  --negative: #c24a4a;
+  --warning: #e9b44c;
+  --border: #232323;
+  --border-subtle: #1a1a1a;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --color-surface: var(--surface);
-  --color-accent-teal: var(--accent-teal);
-  --color-accent-amber: var(--accent-amber);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-accent: var(--accent);
+  --color-accent-blue: var(--accent-blue);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-warning: var(--warning);
   --color-border: var(--border);
-  --color-hover: var(--hover);
+  --color-border-subtle: var(--border-subtle);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
+@keyframes pulse-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+ }

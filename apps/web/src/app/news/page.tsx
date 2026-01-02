@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 import { getPublishedArticles } from "@/lib/articles"
-import { SearchBar } from "@/components/search-bar"
+import { CommandK } from "@/components/command-k"
+import type { ArticleListItem } from "@/lib/articles"
+import { NewsArticleCard } from "@/components/news-article-card"
 
 export const metadata: Metadata = {
   title: "News",
@@ -10,78 +11,185 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic"
 
-export default async function NewsPage() {
-  const { articles } = await getPublishedArticles({ limit: 30 })
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string | string[]; ticker?: string | string[] }>
+}) {
+  const resolvedSearchParams = await searchParams
+  const query = getFirstSearchParam({ value: resolvedSearchParams.q })
+  const ticker = getFirstSearchParam({ value: resolvedSearchParams.ticker })
+
+  const { articles } = await getPublishedArticles({
+    limit: 30,
+    query: query ?? undefined,
+    ticker: ticker ?? undefined,
+  })
+
+  const suggestedTickers = getSuggestedTickers({ articles })
+  const lead = articles[0] ?? null
+  const rest = lead ? articles.slice(1) : []
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <header className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-[#ededed] sm:text-4xl">
-          Financial News
-        </h1>
-        <p className="mt-3 text-lg leading-8 text-[#ededed]/80">
-          AI-generated market updates and breaking coverage across our tracked tickers.
-        </p>
-        <div className="mt-6">
-          <SearchBar placeholder="Search news articles..." />
+    <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <header className="flex flex-col gap-6 border-b border-border pb-8">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Financial News
+          </h1>
+          <p className="max-w-3xl text-sm leading-6 text-foreground-muted">
+            AI-generated market updates and breaking coverage across our tracked tickers.
+          </p>
         </div>
+        {query || ticker ? (
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {ticker ? (
+              <a
+                href={getClearTickerHref({ query })}
+                className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface/80 px-3 py-1 font-mono text-foreground-muted hover:border-accent/30"
+              >
+                Ticker {ticker}
+                <span className="text-foreground-muted/70">×</span>
+              </a>
+            ) : null}
+            {query ? (
+              <a
+                href={getClearQueryHref({ ticker })}
+                className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface/80 px-3 py-1 font-mono text-foreground-muted hover:border-accent/30"
+              >
+                Query {query}
+                <span className="text-foreground-muted/70">×</span>
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </header>
 
-      <section className="mt-10 grid gap-4 md:grid-cols-2">
-        {articles.length ? (
-          articles.map((article) => (
-            <Link
-              key={article.slug}
-              href={`/news/${article.slug}`}
-              className="block rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm transition hover:border-[#0A9D8F]/50 hover:shadow-md"
-            >
-              <div className="flex items-start justify-between gap-6">
-                <div className="flex-1">
-                  <h2 className="text-base font-semibold text-[#ededed]">
-                    {article.title}
-                  </h2>
-                  {article.excerpt && (
-                    <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
-                      {article.excerpt}
-                    </p>
-                  )}
-                </div>
-                <span className="shrink-0 rounded-full border border-[#3a3a3a] bg-[#111111] px-3 py-1 text-xs text-[#ededed]/60">
-                  {getIsoDateLabel({ iso: article.published_at })}
-                </span>
-              </div>
+      <div className="mt-8 grid gap-4 lg:grid-cols-12">
+        <section className="grid gap-4 lg:col-span-8">
+          {lead ? (
+            <NewsArticleCard article={lead} size="lg" />
+          ) : (
+            <div className="rounded-3xl border border-border bg-surface/80 p-10 text-center text-sm text-foreground-muted">
+              No published articles yet. Check back soon!
+            </div>
+          )}
 
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {article.is_breaking && (
-                  <span className="rounded-full bg-[#E9B44C]/20 px-3 py-1 text-xs font-medium text-[#E9B44C]">
-                    Breaking
-                  </span>
-                )}
-                {article.tickers?.length > 0 && article.tickers.map((ticker) => (
-                  <span key={ticker} className="rounded-full bg-[#0A9D8F]/20 px-3 py-1 text-xs font-medium text-[#0A9D8F]">
-                    {ticker}
-                  </span>
-                ))}
-                {article.tags?.length > 0 && article.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="rounded-full border border-[#3a3a3a] px-3 py-1 text-xs text-[#ededed]/60">
-                    {tag}
-                  </span>
-                ))}
+          {rest.length ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {rest.map((article) => (
+                <NewsArticleCard key={article.slug} article={article} />
+              ))}
+            </div>
+          ) : null}
+        </section>
+
+        <aside className="grid gap-4 lg:col-span-4">
+          <section className="rounded-3xl border border-border bg-surface/80 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-medium text-foreground">Global search</p>
+              <span className="font-mono text-[11px] text-foreground-muted">Ctrl/⌘ K</span>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-foreground-muted">
+              Jump to tickers, tags, and the latest stories.
+            </p>
+            <CommandK className="mt-4 w-full justify-between" />
+          </section>
+
+          <section className="rounded-3xl border border-border bg-surface/80 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+            <p className="text-xs font-medium text-foreground">Filter feed</p>
+            <form action="/news" method="get" className="mt-4 grid gap-3">
+              {ticker ? <input type="hidden" name="ticker" value={ticker} /> : null}
+              <input
+                type="search"
+                name="q"
+                defaultValue={query ?? ""}
+                placeholder="Search published articles…"
+                className="w-full rounded-2xl border border-border-subtle bg-background/40 px-4 py-3 text-sm text-foreground placeholder:text-foreground-muted focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/10"
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-2xl bg-accent px-4 py-3 text-sm font-medium text-background transition hover:bg-accent/90"
+              >
+                Apply
+              </button>
+            </form>
+
+            {suggestedTickers.length ? (
+              <div className="mt-5">
+                <p className="text-xs text-foreground-muted">Tickers</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {suggestedTickers.map((symbol) => (
+                    <a
+                      key={symbol}
+                      href={getTickerHref({ symbol, query })}
+                      className={`inline-flex items-center rounded-full px-3 py-1 font-mono text-[11px] transition ${
+                        symbol === ticker
+                          ? "bg-accent/18 text-accent"
+                          : "border border-border-subtle bg-background/40 text-foreground-muted hover:border-accent/30"
+                      }`}
+                    >
+                      {symbol}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </Link>
-          ))
-        ) : (
-          <div className="col-span-2 rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-8 text-center text-sm text-[#ededed]/60 shadow-sm">
-            No published articles yet. Check back soon!
-          </div>
-        )}
-      </section>
+            ) : null}
+          </section>
+        </aside>
+      </div>
     </div>
   )
 }
 
-function getIsoDateLabel({ iso }: { iso: string }) {
-  if (!iso) return ""
+function getFirstSearchParam({ value }: { value: string | string[] | undefined }) {
+  if (!value) return null
+  if (Array.isArray(value)) return value[0] ?? null
+  return value
+}
 
-  return iso.slice(0, 10)
+function getSuggestedTickers({ articles }: { articles: ArticleListItem[] }) {
+  const seen = new Set<string>()
+  const tickers: string[] = []
+
+  for (const article of articles) {
+    for (const symbol of article.tickers ?? []) {
+      if (!symbol) continue
+      if (seen.has(symbol)) continue
+
+      tickers.push(symbol)
+      seen.add(symbol)
+
+      if (tickers.length >= 10) return tickers
+    }
+  }
+
+  return tickers
+}
+
+function getTickerHref({ symbol, query }: { symbol: string; query: string | null }) {
+  const params = new URLSearchParams()
+  params.set("ticker", symbol)
+
+  if (query) params.set("q", query)
+
+  return `/news?${params.toString()}`
+}
+
+function getClearTickerHref({ query }: { query: string | null }) {
+  if (!query) return "/news"
+
+  const params = new URLSearchParams()
+  params.set("q", query)
+
+  return `/news?${params.toString()}`
+}
+
+function getClearQueryHref({ ticker }: { ticker: string | null }) {
+  if (!ticker) return "/news"
+
+  const params = new URLSearchParams()
+  params.set("ticker", ticker)
+
+  return `/news?${params.toString()}`
 }
