@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${inter.variable} ${geistMono.variable} min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#111827] to-[#0a0e1a] font-sans text-[#f9fafb] antialiased`}
+        className={`${inter.variable} ${geistMono.variable} min-h-screen bg-[#0d0d0d] font-sans text-[#e5e5e5] antialiased`}
       >
         <a
           href="#content"
