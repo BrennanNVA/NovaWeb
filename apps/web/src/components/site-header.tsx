@@ -4,7 +4,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { CommandK } from "@/components/command-k"
-import { PulseBar } from "@/components/pulse-bar"
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
@@ -22,7 +21,6 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-background/70 backdrop-blur">
-      <PulseBar />
       <div className="border-b border-border bg-background/70">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
