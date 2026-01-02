@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, Geist_Mono } from "next/font/google"
 
 import { ConsentBanner } from "@/components/consent-banner"
 import { SiteFooter } from "@/components/site-footer"
@@ -7,8 +7,8 @@ import { SiteHeader } from "@/components/site-header"
 
 import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 })
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "Nova Aetus",
     template: "%s | Nova Aetus",
   },
-  description: "Free, open-data research and reproducible datasets.",
+  description: "AI-powered financial news, market insights, and quantitative research hub.",
 }
 
 export default function RootLayout({
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-zinc-50 font-sans text-zinc-950 antialiased dark:bg-black dark:text-zinc-50`}
+        className={`${inter.variable} ${geistMono.variable} min-h-screen bg-[#111111] font-sans text-[#ededed] antialiased`}
       >
         <a
           href="#content"

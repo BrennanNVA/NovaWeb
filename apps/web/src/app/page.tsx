@@ -1,154 +1,145 @@
-import Image from "next/image"
 import Link from "next/link"
 
-import { AdsterraNativeBanner } from "@/components/adsterra-native-banner"
-import { getDatasets, getLatestDataset } from "@/lib/datasets"
+import { SearchBar } from "@/components/search-bar"
+import { getPublishedArticles } from "@/lib/articles"
+import { TrendingUp, Newspaper, BarChart3 } from "lucide-react"
 
-export default function HomePage() {
-  const { dataset: latestDataset } = getLatestDataset()
-  const datasets = getDatasets()
+export default async function HomePage() {
+  const { articles } = await getPublishedArticles({ limit: 3 })
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <section className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-900 dark:bg-zinc-950 sm:p-10">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/globe.svg"
-                alt=""
-                width={28}
-                height={28}
-                className="dark:invert"
-              />
-              <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Free, open-data research
-              </p>
-            </div>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-              Datasets, provenance, and reproducible artifacts—no keys, no paywalls.
-            </h1>
-            <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-300">
-              Nova Aetus publishes research-first datasets with clear licensing, reproducibility
-              links, embeddable widgets, and copyable code examples.
+      {/* Hero Section */}
+      <section className="rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-8 shadow-lg sm:p-10">
+        <div className="max-w-3xl">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="h-7 w-7 text-[#0A9D8F]" aria-hidden="true" />
+            <p className="text-sm font-medium text-[#0A9D8F]">
+              AI-Powered Financial Intelligence
             </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/research"
-                className="inline-flex items-center justify-center rounded-full bg-zinc-950 px-5 py-3 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-white"
-              >
-                Browse datasets
-              </Link>
-              <Link
-                href="/reproducibility"
-                className="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-white px-5 py-3 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
-              >
-                Reproducibility
-              </Link>
-            </div>
           </div>
-
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-zinc-50 p-6 text-left shadow-sm dark:border-zinc-900 dark:bg-black">
-            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              Latest dataset
-            </p>
-            {latestDataset ? (
-              <div className="mt-3 grid gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
-                    {latestDataset.title}
-                  </h2>
-                  <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                    {latestDataset.summary}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
-                  <span>Updated {latestDataset.updatedAt}</span>
-                  <span>License {latestDataset.license}</span>
-                </div>
-                <Link
-                  href={`/research/${latestDataset.slug}`}
-                  className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-zinc-900 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-50 dark:ring-zinc-800 dark:hover:bg-zinc-900"
-                >
-                  View dataset
-                </Link>
-              </div>
-            ) : (
-              <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-                New releases coming soon.
-              </p>
-            )}
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#ededed] sm:text-5xl">
+            Real-time market insights and AI-generated financial news
+          </h1>
+          <p className="mt-4 text-lg leading-8 text-[#ededed]/80">
+            Nova Aetus delivers autonomous financial news coverage, quantitative research, and market analysis—powered by AI, free to access.
+          </p>
+          <div className="mt-8">
+            <SearchBar className="max-w-2xl" />
+          </div>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/news"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0A9D8F] px-5 py-3 text-sm font-medium text-[#111111] hover:bg-[#0A9D8F]/90 transition-colors"
+              aria-label="Read latest news"
+            >
+              <Newspaper className="h-4 w-4" aria-hidden="true" />
+              Latest News
+            </Link>
+            <Link
+              href="/markets"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#3a3a3a] bg-transparent px-5 py-3 text-sm font-medium text-[#ededed] hover:bg-[#333333] transition-colors"
+              aria-label="View market data"
+            >
+              <BarChart3 className="h-4 w-4" aria-hidden="true" />
+              Markets
+            </Link>
           </div>
         </div>
       </section>
 
+      {/* Feature Cards */}
       <section className="mt-10 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950">
-          <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-            Downloadable datasets
+        <div className="rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm hover:border-[#0A9D8F]/50 transition-colors">
+          <Newspaper className="h-6 w-6 text-[#0A9D8F]" aria-hidden="true" />
+          <h3 className="mt-4 text-base font-semibold text-[#ededed]">
+            AI-Generated News
           </h3>
-          <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-            Grab CSVs and metadata directly—optimized for analysis and archiving.
+          <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
+            Autonomous coverage of market-moving events across 50+ tickers, updated daily.
           </p>
         </div>
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950">
-          <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-            Reproducibility artifacts
+        <div className="rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm hover:border-[#0A9D8F]/50 transition-colors">
+          <BarChart3 className="h-6 w-6 text-[#0A9D8F]" aria-hidden="true" />
+          <h3 className="mt-4 text-base font-semibold text-[#ededed]">
+            Market Analysis
           </h3>
-          <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-            Model cards, datasheets, provenance, and transparent sourcing in one place.
+          <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
+            Real-time data and quantitative insights powered by advanced analytics.
           </p>
         </div>
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950">
-          <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-            Embeds and examples
+        <div className="rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm hover:border-[#0A9D8F]/50 transition-colors">
+          <TrendingUp className="h-6 w-6 text-[#0A9D8F]" aria-hidden="true" />
+          <h3 className="mt-4 text-base font-semibold text-[#ededed]">
+            Research & Datasets
           </h3>
-          <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-            Share widgets and copy code snippets for local, offline, and classroom use.
+          <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
+            Open-source financial datasets and reproducible research artifacts.
           </p>
         </div>
       </section>
 
-      <div className="mt-10 flex justify-center">
-        <AdsterraNativeBanner />
-      </div>
-
+      {/* Latest News */}
       <section className="mt-12">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-              Explore datasets
+            <h2 className="text-2xl font-semibold tracking-tight text-[#ededed]">
+              Latest Financial News
             </h2>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Free to use. Clear license. Easy to reproduce.
+            <p className="mt-1 text-sm text-[#ededed]/60">
+              AI-generated insights on market-moving events
             </p>
           </div>
           <Link
-            href="/research"
-            className="text-sm font-medium text-zinc-900 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
+            href="/news"
+            className="text-sm font-medium text-[#0A9D8F] hover:text-[#0A9D8F]/80 transition-colors"
+            aria-label="View all news articles"
           >
-            View all
+            View all →
           </Link>
         </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {datasets.slice(0, 2).map((dataset) => (
-            <Link
-              key={dataset.slug}
-              href={`/research/${dataset.slug}`}
-              className="block rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:border-zinc-300 hover:shadow-md dark:border-zinc-900 dark:bg-zinc-950 dark:hover:border-zinc-800"
-            >
-              <h3 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-                {dataset.title}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                {dataset.summary}
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
-                <span>Updated {dataset.updatedAt}</span>
-                <span>License {dataset.license}</span>
-              </div>
-            </Link>
-          ))}
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {articles.length > 0 ? (
+            articles.map((article) => (
+              <Link
+                key={article.slug}
+                href={`/news/${article.slug}`}
+                className="block rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm transition hover:border-[#0A9D8F]/50 hover:shadow-md"
+              >
+                <div className="flex items-center gap-2">
+                  {article.tickers.length > 0 && (
+                    <span className="rounded-full bg-[#0A9D8F]/20 px-2 py-1 text-xs font-medium text-[#0A9D8F]">
+                      {article.tickers[0]}
+                    </span>
+                  )}
+                  {article.is_breaking && (
+                    <span className="rounded-full bg-[#E9B44C]/20 px-2 py-1 text-xs font-medium text-[#E9B44C]">
+                      Breaking
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-3 text-base font-semibold text-[#ededed] line-clamp-2">
+                  {article.title}
+                </h3>
+                {article.excerpt && (
+                  <p className="mt-2 text-sm leading-6 text-[#ededed]/70 line-clamp-3">
+                    {article.excerpt}
+                  </p>
+                )}
+                <div className="mt-4 text-xs text-[#ededed]/50">
+                  {new Date(article.published_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              </Link>
+            ))
+          ) : (
+            <div className="col-span-3 rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-8 text-center">
+              <p className="text-sm text-[#ededed]/60">No articles published yet. Check back soon!</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

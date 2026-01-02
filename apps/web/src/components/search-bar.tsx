@@ -1,0 +1,49 @@
+"use client"
+
+import { useState } from "react"
+import { Search } from "lucide-react"
+
+interface SearchBarProps {
+  onSearch?: (query: string) => void
+  placeholder?: string
+  className?: string
+}
+
+export function SearchBar({ 
+  onSearch, 
+  placeholder = "Search markets, news, tickers...",
+  className = "" 
+}: SearchBarProps) {
+  const [query, setQuery] = useState("")
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (onSearch && query.trim()) {
+      onSearch(query.trim())
+    }
+  }
+
+  return (
+    <form 
+      onSubmit={handleSubmit} 
+      className={`relative ${className}`}
+      role="search"
+      aria-label="Search financial data"
+    >
+      <div className="relative">
+        <Search 
+          className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#ededed]/40" 
+          aria-hidden="true"
+        />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={placeholder}
+          className="w-full rounded-lg border border-[#3a3a3a] bg-[#2B2B2B] py-3 pl-12 pr-4 text-sm text-[#ededed] placeholder-[#ededed]/40 transition-colors focus:border-[#0A9D8F] focus:outline-none focus:ring-2 focus:ring-[#0A9D8F]/20"
+          aria-label="Search input"
+        />
+      </div>
+    </form>
+  )
+}

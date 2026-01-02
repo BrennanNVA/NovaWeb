@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { AdsterraNativeBanner } from "@/components/adsterra-native-banner"
 import { getPublishedArticles } from "@/lib/articles"
+import { SearchBar } from "@/components/search-bar"
 
 export const metadata: Metadata = {
   title: "News",
@@ -15,60 +15,67 @@ export default async function NewsPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <header className="max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          News
+      <header className="max-w-3xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-[#ededed] sm:text-4xl">
+          Financial News
         </h1>
-        <p className="mt-3 text-lg leading-8 text-zinc-600 dark:text-zinc-300">
-          Automated market updates and breaking coverage across our tracked tickers.
+        <p className="mt-3 text-lg leading-8 text-[#ededed]/80">
+          AI-generated market updates and breaking coverage across our tracked tickers.
         </p>
+        <div className="mt-6">
+          <SearchBar placeholder="Search news articles..." />
+        </div>
       </header>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-2">
+      <section className="mt-10 grid gap-4 md:grid-cols-2">
         {articles.length ? (
           articles.map((article) => (
             <Link
               key={article.slug}
               href={`/news/${article.slug}`}
-              className="block rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:border-zinc-300 hover:shadow-md dark:border-zinc-900 dark:bg-zinc-950 dark:hover:border-zinc-800"
+              className="block rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-6 shadow-sm transition hover:border-[#0A9D8F]/50 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-6">
-                <div>
-                  <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
+                <div className="flex-1">
+                  <h2 className="text-base font-semibold text-[#ededed]">
                     {article.title}
                   </h2>
-                  {article.excerpt ? (
-                    <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                  {article.excerpt && (
+                    <p className="mt-2 text-sm leading-6 text-[#ededed]/70">
                       {article.excerpt}
                     </p>
-                  ) : null}
+                  )}
                 </div>
-                <span className="shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">
+                <span className="shrink-0 rounded-full border border-[#3a3a3a] bg-[#111111] px-3 py-1 text-xs text-[#ededed]/60">
                   {getIsoDateLabel({ iso: article.published_at })}
                 </span>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
-                {article.is_breaking ? (
-                  <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-medium text-white">
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {article.is_breaking && (
+                  <span className="rounded-full bg-[#E9B44C]/20 px-3 py-1 text-xs font-medium text-[#E9B44C]">
                     Breaking
                   </span>
-                ) : null}
-                {article.tickers?.length ? <span>{article.tickers.join(" · ")}</span> : null}
-                {article.tags?.length ? <span>{article.tags.join(" · ")}</span> : null}
+                )}
+                {article.tickers?.length > 0 && article.tickers.map((ticker) => (
+                  <span key={ticker} className="rounded-full bg-[#0A9D8F]/20 px-3 py-1 text-xs font-medium text-[#0A9D8F]">
+                    {ticker}
+                  </span>
+                ))}
+                {article.tags?.length > 0 && article.tags.slice(0, 3).map((tag) => (
+                  <span key={tag} className="rounded-full border border-[#3a3a3a] px-3 py-1 text-xs text-[#ededed]/60">
+                    {tag}
+                  </span>
+                ))}
               </div>
             </Link>
           ))
         ) : (
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 text-sm text-zinc-600 shadow-sm dark:border-zinc-900 dark:bg-zinc-950 dark:text-zinc-400">
-            No published articles yet.
+          <div className="col-span-2 rounded-2xl border border-[#3a3a3a] bg-[#2B2B2B] p-8 text-center text-sm text-[#ededed]/60 shadow-sm">
+            No published articles yet. Check back soon!
           </div>
         )}
       </section>
-
-      <div className="mt-10 flex justify-center">
-        <AdsterraNativeBanner />
-      </div>
     </div>
   )
 }
