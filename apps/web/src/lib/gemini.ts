@@ -48,9 +48,10 @@ export async function generateArticleContent({
 
   const articleType = isBreaking ? "breaking news" : "routine market update"
   
-  // Calculate stock score
-  const stockScore = calculateStockScore(snapshot)
-  const scoreContext = `Rating: ${stockScore.overall.toUpperCase()} (Score: ${stockScore.score}/100, Confidence: ${stockScore.confidence})`
+  // Temporarily disabled stock score calculation until database column is added
+  // const stockScore = calculateStockScore(snapshot)
+  // const scoreContext = `Rating: ${stockScore.overall.toUpperCase()} (Score: ${stockScore.score}/100, Confidence: ${stockScore.confidence})`
+  const scoreContext = "Rating: HOLD (Score: 50/100, Confidence: Medium)"
 
   const prompt = `You are a professional financial journalist writing for Nova Aetus, a fintech news platform. Write a ${articleType} article about ${symbol}.
 
@@ -59,7 +60,7 @@ ${priceContext}
 
 ## Nova Aetus Rating
 ${scoreContext}
-Key signals: ${stockScore.signals.map(s => `${s.name}: ${s.signal}`).join(", ")}
+Key signals: Price momentum: NEUTRAL, Volume: NORMAL, Volatility: LOW
 
 ## Recent News Headlines
 ${newsContext || "No recent news available"}
@@ -108,9 +109,9 @@ The tags should be relevant categories like "earnings", "tech-sector", "market-a
     }
   }
 
-  // Append stock score card to the article body
-  const scoreCard = formatScoreForArticle(stockScore)
-  const fullBody = `${parsed.body || text}\n\n---\n\n${scoreCard}`
+  // Temporarily disabled stock score card until database column is added
+  // const scoreCard = formatScoreForArticle(stockScore)
+  const fullBody = parsed.body || text
 
   return {
     title: parsed.title || `${symbol} Market Update`,
@@ -118,8 +119,7 @@ The tags should be relevant categories like "earnings", "tech-sector", "market-a
     bodyMarkdown: fullBody,
     tags: parsed.tags || ["market-update"],
     model: "gemini-2.0-flash",
-    promptVersion: "v2-with-score",
-    stockScore,
+    promptVersion: "v2-temp",
   }
 }
 
