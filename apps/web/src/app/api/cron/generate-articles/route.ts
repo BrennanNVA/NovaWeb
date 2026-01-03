@@ -137,7 +137,6 @@ export async function POST(request: Request) {
       promptVersion: promptVersion,
       marketSnapshot: marketSnapshot,
       sourceNews: marketSnapshot?.news ?? null,
-      stockScore: stockScore,
       publishedAt: new Date().toISOString(),
     })
 

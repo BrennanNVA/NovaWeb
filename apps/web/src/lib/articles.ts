@@ -13,7 +13,7 @@ export async function getPublishedArticles({ limit, query, ticker }: GetPublishe
 
   let request = supabase
     .from("articles")
-    .select("id, slug, title, excerpt, tickers, tags, is_breaking, stock_score, published_at")
+    .select("id, slug, title, excerpt, tickers, tags, is_breaking, published_at")
     .eq("status", "published")
 
   if (cleanedTicker) request = request.contains("tickers", [cleanedTicker])
@@ -209,7 +209,6 @@ export interface ArticleListItem {
   tickers: string[]
   tags: string[]
   is_breaking: boolean
-  stock_score: unknown | null
   published_at: string
 }
 
@@ -227,7 +226,6 @@ export interface Article {
   prompt_version: string | null
   market_snapshot: unknown | null
   source_news: unknown | null
-  stock_score: unknown | null
   published_at: string
   created_at: string
 }
