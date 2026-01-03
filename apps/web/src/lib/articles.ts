@@ -13,7 +13,7 @@ export async function getPublishedArticles({ limit, query, ticker }: GetPublishe
 
   let request = supabase
     .from("articles")
-    .select("id, slug, title, excerpt, tickers, tags, is_breaking, published_at")
+    .select("id, slug, title, excerpt, tickers, tags, is_breaking, stock_score, published_at")
     .eq("status", "published")
 
   if (cleanedTicker) request = request.contains("tickers", [cleanedTicker])
@@ -115,6 +115,7 @@ export async function createPublishedArticle({
   promptVersion,
   marketSnapshot,
   sourceNews,
+  stockScore,
   publishedAt,
 }: CreatePublishedArticleArgs) {
   const supabase = createServiceSupabaseClient()
@@ -134,6 +135,7 @@ export async function createPublishedArticle({
       prompt_version: promptVersion ?? null,
       market_snapshot: marketSnapshot ?? null,
       source_news: sourceNews ?? null,
+      stock_score: stockScore ?? null,
       published_at: publishedAt ?? new Date().toISOString(),
     })
     .select("*")
@@ -195,6 +197,7 @@ interface CreatePublishedArticleArgs {
   promptVersion?: string | null
   marketSnapshot?: unknown
   sourceNews?: unknown
+  stockScore?: unknown
   publishedAt?: string
 }
 
@@ -206,6 +209,7 @@ export interface ArticleListItem {
   tickers: string[]
   tags: string[]
   is_breaking: boolean
+  stock_score: unknown | null
   published_at: string
 }
 
@@ -223,6 +227,7 @@ export interface Article {
   prompt_version: string | null
   market_snapshot: unknown | null
   source_news: unknown | null
+  stock_score: unknown | null
   published_at: string
   created_at: string
 }

@@ -1,7 +1,21 @@
 import Link from "next/link"
-import { ArrowRight, Clock, Zap, BarChart3, Globe, FileText, Database, Newspaper, BookOpen } from "lucide-react"
+import { ArrowRight, Clock, Zap, BarChart3, Globe, FileText, Database, Newspaper, BookOpen, TrendingUp, TrendingDown, Minus } from "lucide-react"
 
 import { getPublishedArticles, type ArticleListItem } from "@/lib/articles"
+import { calculateReadingTime, formatReadingTime } from "@/lib/reading-time"
+
+interface StockScoreData {
+  overall: "buy" | "hold" | "sell"
+  score: number
+  confidence: "low" | "medium" | "high"
+  signals: Array<{
+    name: string
+    signal: "bullish" | "neutral" | "bearish"
+    weight: number
+    description: string
+  }>
+  summary: string
+}
 
 export default async function HomePage() {
   const { articles } = await getPublishedArticles({ limit: 12 })
@@ -238,6 +252,29 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
   const accentColor = variant === "macro" ? "text-accent-blue" : "text-accent"
   const bgColor = variant === "macro" ? "bg-accent-blue/10" : "bg-accent/10"
   
+  // Extract stock score if available
+  const stockScore = article.stock_score as StockScoreData | null
+  const hasScore = stockScore && typeof stockScore === 'object' && stockScore.overall
+  
+  // Calculate read time from excerpt (fallback to title if no excerpt)
+  const textToAnalyze = article.excerpt || article.title
+  const readTime = formatReadingTime(calculateReadingTime(textToAnalyze))
+  
+  // Get rating icon and color
+  const getRatingDisplay = (rating: string) => {
+    switch (rating) {
+      case "buy":
+        return { icon: TrendingUp, color: "text-positive", bg: "bg-positive/10", label: "BUY" }
+      case "sell":
+        return { icon: TrendingDown, color: "text-negative", bg: "bg-negative/10", label: "SELL" }
+      default:
+        return { icon: Minus, color: "text-warning", bg: "bg-warning/10", label: "HOLD" }
+    }
+  }
+  
+  const ratingDisplay = hasScore ? getRatingDisplay(stockScore.overall) : null
+  const RatingIcon = ratingDisplay?.icon
+  
   return (
     <article className="group border border-border rounded-lg p-4 hover:border-accent/30 transition-colors">
       <Link href={`/news/${article.slug}`} className="block">
@@ -247,6 +284,12 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
               {ticker}
             </span>
           ))}
+          {ratingDisplay && (
+            <span className={`text-[10px] font-bold ${ratingDisplay.color} ${ratingDisplay.bg} px-1.5 py-0.5 rounded flex items-center gap-0.5`}>
+              {RatingIcon && <RatingIcon className="h-2.5 w-2.5" />}
+              {ratingDisplay.label}
+            </span>
+          )}
           {article.tags?.includes("macro") && (
             <span className="text-[10px] font-mono text-accent-blue bg-accent-blue/10 px-1.5 py-0.5 rounded">
               MACRO
@@ -254,11 +297,27 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
           )}
           <span className="text-[10px] text-foreground-muted ml-auto">{formatDate(article.published_at)}</span>
         </div>
-        <h4 className="text-sm font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+        
+        <h4 className="text-sm font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2 mb-2">
           {article.title}
         </h4>
-        {article.excerpt && (
-          <p className="text-xs text-foreground-muted mt-1.5 line-clamp-2">{article.excerpt}</p>
+        
+        <div className="flex items-center justify-between gap-2">
+          {article.excerpt && (
+            <p className="text-xs text-foreground-muted line-clamp-2 flex-1">{article.excerpt}</p>
+          )}
+          <span className="text-[10px] text-foreground-muted/70 whitespace-nowrap">{readTime}</span>
+        </div>
+        
+        {hasScore && stockScore.score && (
+          <div className="mt-2 pt-2 border-t border-border/50">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-foreground-muted">Score</span>
+              <span className={`text-[10px] font-bold ${ratingDisplay?.color}`}>
+                {stockScore.score > 0 ? "+" : ""}{stockScore.score}/100
+              </span>
+            </div>
+          </div>
         )}
       </Link>
     </article>

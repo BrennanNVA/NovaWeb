@@ -89,6 +89,7 @@ export async function POST(request: Request) {
     let model: string | null = null
     let promptVersion: string = "v0"
     let marketSnapshot: MarketSnapshot | null = null
+    let stockScore: unknown = null
 
     const hasAlpacaKeys = process.env.ALPACA_API_KEY && process.env.ALPACA_API_SECRET
     const hasGeminiKey = process.env.GEMINI_API_KEY
@@ -109,6 +110,7 @@ export async function POST(request: Request) {
         tags = generated.tags
         model = generated.model
         promptVersion = generated.promptVersion
+        stockScore = generated.stockScore
       } catch (aiError) {
         console.error("AI generation failed, falling back to placeholder:", aiError)
         const date = publishedAt.slice(0, 10)
@@ -125,17 +127,18 @@ export async function POST(request: Request) {
 
     const { article } = await createPublishedArticle({
       slug,
-      title,
-      excerpt,
-      bodyMarkdown,
+      title: title,
+      excerpt: excerpt,
+      bodyMarkdown: bodyMarkdown,
       tickers: [symbol],
-      tags,
+      tags: tags,
       isBreaking,
-      model,
-      promptVersion,
-      marketSnapshot,
+      model: model,
+      promptVersion: promptVersion,
+      marketSnapshot: marketSnapshot,
       sourceNews: marketSnapshot?.news ?? null,
-      publishedAt,
+      stockScore: stockScore,
+      publishedAt: new Date().toISOString(),
     })
 
     await touchTickerLastArticleAt({ symbol, publishedAt })
