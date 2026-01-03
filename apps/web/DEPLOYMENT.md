@@ -57,8 +57,9 @@ Railway Cron allows you to schedule HTTP requests to your deployed endpoints.
    - Name: `generate-articles`
 
 2. **Configure Schedule**
-   - Schedule: `0 */2 * * *` (every 2 hours)
-   - Or customize based on your needs (max 12 articles/day recommended)
+   - Schedule: `0 */1.5 * * *` or `0,30 */3 * * *` (every 90 minutes)
+   - This generates up to 16 articles/day (capped at 13 routine + breaking news)
+   - For 30-minute stock updates: `*/30 * * * *` (requires higher API limits)
 
 3. **Configure HTTP Request**
    - Method: `POST`

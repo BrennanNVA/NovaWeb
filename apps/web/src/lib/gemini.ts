@@ -3,6 +3,7 @@ import "server-only"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
 import type { MarketSnapshot } from "@/lib/alpaca"
+import { calculateStockScore, formatScoreForArticle, type StockScore } from "@/lib/stock-score"
 
 function getGeminiClient() {
   const apiKey = process.env.GEMINI_API_KEY
@@ -21,6 +22,7 @@ export interface GeneratedArticle {
   tags: string[]
   model: string
   promptVersion: string
+  stockScore?: StockScore
 }
 
 export async function generateArticleContent({
@@ -45,11 +47,19 @@ export async function generateArticleContent({
     : "Price data unavailable"
 
   const articleType = isBreaking ? "breaking news" : "routine market update"
+  
+  // Calculate stock score
+  const stockScore = calculateStockScore(snapshot)
+  const scoreContext = `Rating: ${stockScore.overall.toUpperCase()} (Score: ${stockScore.score}/100, Confidence: ${stockScore.confidence})`
 
   const prompt = `You are a professional financial journalist writing for Nova Aetus, a fintech news platform. Write a ${articleType} article about ${symbol}.
 
 ## Market Data
 ${priceContext}
+
+## Nova Aetus Rating
+${scoreContext}
+Key signals: ${stockScore.signals.map(s => `${s.name}: ${s.signal}`).join(", ")}
 
 ## Recent News Headlines
 ${newsContext || "No recent news available"}
@@ -57,12 +67,13 @@ ${newsContext || "No recent news available"}
 ## Instructions
 1. Write a professional, informative article about ${symbol}'s current market situation
 2. Include analysis of the price movement and any relevant news
-3. Keep the tone professional but accessible
-4. Article should be 300-500 words
-5. Use markdown formatting with headers (##), bullet points, and bold text where appropriate
-6. Do NOT include the title in the body - just the content
-7. Focus on facts and market analysis, avoid speculation
-8. If news is limited, focus on technical analysis and market context
+3. Reference the Nova Aetus rating and what it means for investors
+4. Keep the tone professional but accessible
+5. Article should be 400-600 words
+6. Use markdown formatting with headers (##), bullet points, and bold text where appropriate
+7. Do NOT include the title in the body - just the content
+8. Focus on facts and market analysis, avoid speculation
+9. Include a brief "What to Watch" section at the end
 
 ## Output Format
 Return ONLY a JSON object with this exact structure (no markdown code blocks):
@@ -97,13 +108,18 @@ The tags should be relevant categories like "earnings", "tech-sector", "market-a
     }
   }
 
+  // Append stock score card to the article body
+  const scoreCard = formatScoreForArticle(stockScore)
+  const fullBody = `${parsed.body || text}\n\n---\n\n${scoreCard}`
+
   return {
     title: parsed.title || `${symbol} Market Update`,
     excerpt: parsed.excerpt || `Market analysis for ${symbol}.`,
-    bodyMarkdown: parsed.body || text,
+    bodyMarkdown: fullBody,
     tags: parsed.tags || ["market-update"],
     model: "gemini-2.0-flash",
-    promptVersion: "v1",
+    promptVersion: "v2-with-score",
+    stockScore,
   }
 }
 

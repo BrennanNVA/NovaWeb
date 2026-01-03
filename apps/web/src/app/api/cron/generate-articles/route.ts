@@ -165,7 +165,7 @@ export async function POST(request: Request) {
   }
 }
 
-const MAX_ROUTINE_ARTICLES_PER_DAY = 10
+const MAX_ROUTINE_ARTICLES_PER_DAY = 13
 
 const generateArticlesBodySchema = z.object({
   symbol: z.string().min(1).optional(),
