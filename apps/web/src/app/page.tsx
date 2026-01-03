@@ -252,9 +252,9 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
   const accentColor = variant === "macro" ? "text-accent-blue" : "text-accent"
   const bgColor = variant === "macro" ? "bg-accent-blue/10" : "bg-accent/10"
   
-  // Extract stock score if available
-  const stockScore = article.stock_score as StockScoreData | null
-  const hasScore = stockScore && typeof stockScore === 'object' && stockScore.overall
+  // Extract stock score if available (temporarily disabled until database column is added)
+  const stockScore = null
+  const hasScore = false
   
   // Calculate read time from excerpt (fallback to title if no excerpt)
   const textToAnalyze = article.excerpt || article.title
@@ -272,8 +272,8 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
     }
   }
   
-  const ratingDisplay = hasScore ? getRatingDisplay(stockScore.overall) : null
-  const RatingIcon = ratingDisplay?.icon
+  const ratingDisplay = null
+  const RatingIcon = null
   
   return (
     <article className="group border border-border rounded-lg p-4 hover:border-accent/30 transition-colors">
@@ -284,12 +284,13 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
               {ticker}
             </span>
           ))}
-          {ratingDisplay && (
+          {/* Temporarily disabled stock score badges until database column is added */}
+          {/* {ratingDisplay && (
             <span className={`text-[10px] font-bold ${ratingDisplay.color} ${ratingDisplay.bg} px-1.5 py-0.5 rounded flex items-center gap-0.5`}>
               {RatingIcon && <RatingIcon className="h-2.5 w-2.5" />}
               {ratingDisplay.label}
             </span>
-          )}
+          )} */}
           {article.tags?.includes("macro") && (
             <span className="text-[10px] font-mono text-accent-blue bg-accent-blue/10 px-1.5 py-0.5 rounded">
               MACRO
@@ -309,7 +310,8 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
           <span className="text-[10px] text-foreground-muted/70 whitespace-nowrap">{readTime}</span>
         </div>
         
-        {hasScore && stockScore.score && (
+        {/* Temporarily disabled stock score display until database column is added */}
+        {/* {hasScore && stockScore.score && (
           <div className="mt-2 pt-2 border-t border-border/50">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-foreground-muted">Score</span>
@@ -318,7 +320,7 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
               </span>
             </div>
           </div>
-        )}
+        )} */}
       </Link>
     </article>
   )
