@@ -7,6 +7,10 @@ import { getDatasets } from "@/lib/datasets"
 
 export const metadata: Metadata = {
   title: "Repos & Embeds",
+  description: "GitHub repositories, embeddable widgets, and integration guides for Nova Aetus datasets.",
+  alternates: {
+    canonical: "/repos",
+  },
 }
 
 export default function ReposPage() {

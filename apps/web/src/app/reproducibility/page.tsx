@@ -6,6 +6,10 @@ import { getDatasets } from "@/lib/datasets"
 
 export const metadata: Metadata = {
   title: "Reproducibility",
+  description: "Model cards, datasheets, and reproducibility artifacts for Nova Aetus financial datasets.",
+  alternates: {
+    canonical: "/reproducibility",
+  },
 }
 
 export default function ReproducibilityPage() {

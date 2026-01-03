@@ -5,7 +5,11 @@ import { TrendingUp, Globe, BarChart3, Zap, ArrowRight } from "lucide-react"
 import { getPublishedArticles } from "@/lib/articles"
 
 export const metadata: Metadata = {
-  title: "Analysis",
+  title: "Market Analysis",
+  description: "AI-generated market analysis, macro insights, and sector coverage updated throughout the day.",
+  alternates: {
+    canonical: "/analysis",
+  },
 }
 
 export const dynamic = "force-dynamic"

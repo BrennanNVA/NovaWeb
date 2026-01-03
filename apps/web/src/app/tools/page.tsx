@@ -7,6 +7,10 @@ import { getLatestDataset } from "@/lib/datasets"
 
 export const metadata: Metadata = {
   title: "Tools & Examples",
+  description: "Code examples, API snippets, and developer tools for integrating Nova Aetus financial data.",
+  alternates: {
+    canonical: "/tools",
+  },
 }
 
 export default function ToolsPage() {

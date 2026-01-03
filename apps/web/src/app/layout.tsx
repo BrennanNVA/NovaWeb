@@ -23,6 +23,33 @@ export const metadata: Metadata = {
     template: "%s | Nova Aetus",
   },
   description: "AI-powered financial news, market insights, and quantitative research hub.",
+  metadataBase: new URL("https://www.novaaetus.com"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Nova Aetus",
+    title: "Nova Aetus - AI-Powered Financial Intelligence",
+    description: "AI-powered financial news, market insights, and quantitative research hub.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nova Aetus - AI-Powered Financial Intelligence",
+    description: "AI-powered financial news, market insights, and quantitative research hub.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 }
 
 export default function RootLayout({

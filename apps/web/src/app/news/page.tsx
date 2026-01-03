@@ -6,7 +6,15 @@ import type { ArticleListItem } from "@/lib/articles"
 import { NewsArticleCard } from "@/components/news-article-card"
 
 export const metadata: Metadata = {
-  title: "News",
+  title: "Financial News",
+  description: "AI-generated market updates, breaking news, and real-time analysis across stocks, crypto, and global markets.",
+  alternates: {
+    canonical: "/news",
+  },
+  openGraph: {
+    title: "Financial News | Nova Aetus",
+    description: "AI-generated market updates, breaking news, and real-time analysis across stocks, crypto, and global markets.",
+  },
 }
 
 export const dynamic = "force-dynamic"

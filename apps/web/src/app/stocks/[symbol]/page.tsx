@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, TrendingUp, TrendingDown, Minus, Clock, BarChart3, Globe } from "lucide-react"
@@ -7,13 +8,30 @@ import { fetchMarketSnapshot } from "@/lib/alpaca"
 import { calculateStockScore, formatScoreForArticle, type StockScore } from "@/lib/stock-score"
 
 interface StockPageProps {
-  params: {
+  params: Promise<{
     symbol: string
+  }>
+}
+
+export async function generateMetadata({ params }: StockPageProps): Promise<Metadata> {
+  const { symbol } = await params
+  const normalizedSymbol = symbol.toUpperCase()
+  
+  return {
+    title: `${normalizedSymbol} Stock Analysis`,
+    description: `Latest AI-powered analysis, market data, and news for ${normalizedSymbol} stock. Get real-time insights and stock score ratings.`,
+    alternates: {
+      canonical: `/stocks/${normalizedSymbol.toLowerCase()}`,
+    },
+    openGraph: {
+      title: `${normalizedSymbol} Stock Analysis | Nova Aetus`,
+      description: `Latest AI-powered analysis, market data, and news for ${normalizedSymbol} stock.`,
+    },
   }
 }
 
 export default async function StockPage({ params }: StockPageProps) {
-  const { symbol } = params
+  const { symbol } = await params
   const normalizedSymbol = symbol.toUpperCase()
 
   // Fetch recent articles for this stock

@@ -6,6 +6,10 @@ import { getDatasets } from "@/lib/datasets"
 
 export const metadata: Metadata = {
   title: "Research & Datasets",
+  description: "Open-source financial datasets and quantitative research with clear licensing and reproducibility.",
+  alternates: {
+    canonical: "/research",
+  },
 }
 
 export default function ResearchPage() {

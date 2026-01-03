@@ -6,7 +6,11 @@ import { CommandK } from "@/components/command-k"
 import { getPublishedArticles } from "@/lib/articles"
 
 export const metadata: Metadata = {
-  title: "Markets",
+  title: "Markets Overview",
+  description: "Real-time market data and AI-generated coverage across major indices, stocks, and crypto.",
+  alternates: {
+    canonical: "/markets",
+  },
 }
 
 export const dynamic = "force-dynamic"

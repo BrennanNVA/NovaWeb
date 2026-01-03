@@ -18,9 +18,27 @@ export async function generateMetadata({
 
   if (!article) return { title: "News" }
 
+  const description = article.excerpt ?? `Read the latest analysis on ${article.tickers?.join(", ") || "financial markets"} from Nova Aetus.`
+
   return {
     title: article.title,
-    description: article.excerpt ?? undefined,
+    description,
+    alternates: {
+      canonical: `/news/${slug}`,
+    },
+    openGraph: {
+      title: article.title,
+      description,
+      type: "article",
+      publishedTime: article.published_at,
+      authors: ["Nova Aetus"],
+      tags: article.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description,
+    },
   }
 }
 

@@ -1,0 +1,19 @@
+# Nova Aetus Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.novaaetus.com/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /_next/
+
+# Allow search engines to crawl all public pages
+Allow: /news/
+Allow: /stocks/
+Allow: /analysis/
+Allow: /research/
+Allow: /markets/
+Allow: /about/
+Allow: /legal/

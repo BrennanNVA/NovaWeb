@@ -3,7 +3,11 @@ import type { Metadata } from "next"
 import { AdsterraNativeBanner } from "@/components/adsterra-native-banner"
 
 export const metadata: Metadata = {
-  title: "Legal",
+  title: "Legal & Privacy",
+  description: "Plain-language policies, privacy information, and licensing guidance for Nova Aetus.",
+  alternates: {
+    canonical: "/legal",
+  },
 }
 
 export default function LegalPage() {
