@@ -135,7 +135,7 @@ export async function createPublishedArticle({
       prompt_version: promptVersion ?? null,
       market_snapshot: marketSnapshot ?? null,
       source_news: sourceNews ?? null,
-      stock_score: stockScore ?? null,
+      // stock_score: stockScore ?? null, // Temporarily disabled until database column is added
       published_at: publishedAt ?? new Date().toISOString(),
     })
     .select("*")
