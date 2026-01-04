@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
+import Script from "next/script"
 
 import { ConsentBanner } from "@/components/consent-banner"
 import { SiteFooter } from "@/components/site-footer"
@@ -56,6 +57,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-9B6H0DERV0"
+
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -85,6 +88,20 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
+        {gaMeasurementId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaMeasurementId}', { anonymize_ip: true });`}
+            </Script>
+          </>
+        ) : null}
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-zinc-950 focus:shadow-lg dark:focus:bg-zinc-950 dark:focus:text-zinc-50"
