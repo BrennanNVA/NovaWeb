@@ -61,16 +61,19 @@ const TICKER_TO_DOMAIN: Record<string, string> = {
 }
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  macro: "/images/categories/macro.jpg",
-  earnings: "/images/categories/earnings.jpg",
-  crypto: "/images/categories/crypto.jpg",
-  fed: "/images/categories/fed.jpg",
-  markets: "/images/categories/markets.jpg",
-  tech: "/images/categories/tech.jpg",
-  energy: "/images/categories/energy.jpg",
-  healthcare: "/images/categories/healthcare.jpg",
-  finance: "/images/categories/finance.jpg",
-  default: "/images/categories/default.jpg",
+  macro: "https://images.unsplash.com/photo-1611974717482-480ce5160242?q=80&w=1200&auto=format&fit=crop",
+  earnings: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1200&auto=format&fit=crop",
+  crypto: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=1200&auto=format&fit=crop",
+  fed: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
+  markets: "https://images.unsplash.com/photo-1611974717482-480ce5160242?q=80&w=1200&auto=format&fit=crop",
+  tech: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
+  energy: "https://images.unsplash.com/photo-1466611653911-954ff2131178?q=80&w=1200&auto=format&fit=crop",
+  healthcare: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1200&auto=format&fit=crop",
+  finance: "https://images.unsplash.com/photo-1454165833767-027508496b41?q=80&w=1200&auto=format&fit=crop",
+  "breaking-news": "https://images.unsplash.com/photo-1585829365234-781f7551f1b0?q=80&w=1200&auto=format&fit=crop",
+  world: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1200&auto=format&fit=crop",
+  geopolitics: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?q=80&w=1200&auto=format&fit=crop",
+  default: "https://images.unsplash.com/photo-1611974717482-480ce5160242?q=80&w=1200&auto=format&fit=crop",
 }
 
 export function getStockLogoUrl({ ticker }: { ticker: string }): string | null {
@@ -96,15 +99,19 @@ export function getArticleImageUrl({
   tickers: string[]
   tags: string[]
 }): { url: string; type: "logo" | "category"; ticker?: string } {
+  // For social media previews (Open Graph), we prefer high-quality category images
+  // as they look much better in "summary_large_image" cards than small logos.
+  const categoryUrl = getCategoryImageUrl({ tags })
+  
+  // If we have a ticker and it's specifically requested, we could use the logo,
+  // but for the default article image, the category background is usually better.
   if (tickers.length > 0) {
     const primaryTicker = tickers[0]
-    const logoUrl = getStockLogoUrl({ ticker: primaryTicker })
-    if (logoUrl) {
-      return { url: logoUrl, type: "logo", ticker: primaryTicker }
-    }
+    // We still return the logo info if needed elsewhere, but the URL will be the category one for metadata
+    return { url: categoryUrl, type: "category", ticker: primaryTicker }
   }
 
-  return { url: getCategoryImageUrl({ tags }), type: "category" }
+  return { url: categoryUrl, type: "category" }
 }
 
 export function getMultipleStockLogos({

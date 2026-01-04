@@ -7,6 +7,8 @@ import { getPublishedArticles } from "@/lib/articles"
 import { fetchMarketSnapshot } from "@/lib/alpaca"
 import { calculateStockScore, formatScoreForArticle, type StockScore } from "@/lib/stock-score"
 
+import { getStockLogoUrl } from "@/lib/stock-images"
+
 interface StockPageProps {
   params: Promise<{
     symbol: string
@@ -16,6 +18,7 @@ interface StockPageProps {
 export async function generateMetadata({ params }: StockPageProps): Promise<Metadata> {
   const { symbol } = await params
   const normalizedSymbol = symbol.toUpperCase()
+  const logoUrl = getStockLogoUrl({ ticker: normalizedSymbol })
   
   return {
     title: `${normalizedSymbol} Stock Analysis`,
@@ -26,6 +29,20 @@ export async function generateMetadata({ params }: StockPageProps): Promise<Meta
     openGraph: {
       title: `${normalizedSymbol} Stock Analysis | Nova Aetus`,
       description: `Latest AI-powered analysis, market data, and news for ${normalizedSymbol} stock.`,
+      images: logoUrl ? [
+        {
+          url: logoUrl,
+          width: 400,
+          height: 400,
+          alt: `${normalizedSymbol} logo`,
+        }
+      ] : [],
+    },
+    twitter: {
+      card: "summary",
+      title: `${normalizedSymbol} Stock Analysis | Nova Aetus`,
+      description: `Latest AI-powered analysis, market data, and news for ${normalizedSymbol} stock.`,
+      images: logoUrl ? [logoUrl] : [],
     },
   }
 }

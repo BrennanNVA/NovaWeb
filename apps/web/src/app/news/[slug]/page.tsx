@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, TrendingUp, Building2 } from "lucide-react"
 
 import { getPublishedArticleBySlug } from "@/lib/articles"
 import { MarkdownRenderer } from "@/components/markdown-renderer"
-import { getStockLogoUrl } from "@/lib/stock-images"
+import { getStockLogoUrl, getArticleImageUrl } from "@/lib/stock-images"
 
 export const dynamic = "force-dynamic"
 
@@ -21,6 +21,10 @@ export async function generateMetadata({
   if (!article) return { title: "News" }
 
   const description = article.excerpt ?? `Read the latest analysis on ${article.tickers?.join(", ") || "financial markets"} from Nova Aetus.`
+  const { url: imageUrl } = getArticleImageUrl({ 
+    tickers: article.tickers || [], 
+    tags: article.tags || [] 
+  })
 
   return {
     title: article.title,
@@ -35,11 +39,22 @@ export async function generateMetadata({
       publishedTime: article.published_at,
       authors: ["Nova Aetus"],
       tags: article.tags,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
+      site: "@NovaAetus",
+      creator: "@NovaAetus",
       title: article.title,
       description,
+      images: [imageUrl],
     },
   }
 }

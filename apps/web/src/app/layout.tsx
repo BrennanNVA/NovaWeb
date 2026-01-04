@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     siteName: "Nova Aetus",
     title: "Nova Aetus - AI-Powered Financial News & Market Intelligence",
     description: "Get real-time AI-powered financial news, stock analysis, market insights, and quantitative research. Track breaking market events and make informed investment decisions.",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1611974717482-480ce5160242?q=80&w=1200&auto=format&fit=crop",
+        width: 1200,
+        height: 630,
+        alt: "Nova Aetus - Financial Intelligence",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -38,6 +46,7 @@ export const metadata: Metadata = {
     creator: "@NovaAetus",
     title: "Nova Aetus - AI-Powered Financial News & Market Intelligence",
     description: "Get real-time AI-powered financial news, stock analysis, market insights, and quantitative research. Track breaking market events and make informed investment decisions.",
+    images: ["https://images.unsplash.com/photo-1611974717482-480ce5160242?q=80&w=1200&auto=format&fit=crop"],
   },
   robots: {
     index: true,
