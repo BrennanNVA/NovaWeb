@@ -102,7 +102,7 @@ const DATASETS: Dataset[] = [
         code: [
           "import pandas as pd",
           "",
-          'url = "https://novaaetus.com/datasets/sample-weather-daily.csv"',
+          'url = "https://www.novaaetus.com/datasets/sample-weather-daily.csv"',
           "df = pd.read_csv(url)",
           "print(df.head())",
         ].join("\n"),
@@ -112,14 +112,14 @@ const DATASETS: Dataset[] = [
         code: [
           "library(readr)",
           "",
-          'df <- read_csv("https://novaaetus.com/datasets/sample-weather-daily.csv")',
+          'df <- read_csv("https://www.novaaetus.com/datasets/sample-weather-daily.csv")',
           "head(df)",
         ].join("\n"),
       },
       {
         language: "JavaScript",
         code: [
-          'const res = await fetch("https://novaaetus.com/datasets/sample-weather-daily.csv")',
+          'const res = await fetch("https://www.novaaetus.com/datasets/sample-weather-daily.csv")',
           "const text = await res.text()",
           "const preview = text.split(\"\\n\").slice(0, 6).join(\"\\n\")",
           "console.log(preview)",
@@ -173,7 +173,7 @@ const DATASETS: Dataset[] = [
         code: [
           "import pandas as pd",
           "",
-          'url = "https://novaaetus.com/datasets/sample-market-indicators.csv"',
+          'url = "https://www.novaaetus.com/datasets/sample-market-indicators.csv"',
           "df = pd.read_csv(url)",
           "print(df.tail())",
         ].join("\n"),
@@ -183,14 +183,14 @@ const DATASETS: Dataset[] = [
         code: [
           "library(readr)",
           "",
-          'df <- read_csv("https://novaaetus.com/datasets/sample-market-indicators.csv")',
+          'df <- read_csv("https://www.novaaetus.com/datasets/sample-market-indicators.csv")',
           "tail(df)",
         ].join("\n"),
       },
       {
         language: "JavaScript",
         code: [
-          'const res = await fetch("https://novaaetus.com/datasets/sample-market-indicators.csv")',
+          'const res = await fetch("https://www.novaaetus.com/datasets/sample-market-indicators.csv")',
           "const text = await res.text()",
           "console.log(text.split(\"\\n\").slice(0, 6).join(\"\\n\"))",
         ].join("\n"),

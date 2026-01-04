@@ -24,6 +24,9 @@ export async function generateMetadata({
   return {
     title: `Model card: ${dataset.title}`,
     description: dataset.summary,
+    alternates: {
+      canonical: `/reproducibility/model-card/${dataset.slug}`,
+    },
   }
 }
 
@@ -183,7 +186,7 @@ function getQuickstartCode({
   metadataHref: string
 }) {
   return [
-    `curl -L -o dataset.csv https://novaaetus.com${datasetHref}`,
-    `curl -L -o metadata.json https://novaaetus.com${metadataHref}`,
+    `curl -L -o dataset.csv https://www.novaaetus.com${datasetHref}`,
+    `curl -L -o metadata.json https://www.novaaetus.com${metadataHref}`,
   ].filter(Boolean).join("\n")
 }

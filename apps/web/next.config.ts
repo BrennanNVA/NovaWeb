@@ -5,6 +5,22 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "^novaaetus\\.com$",
+          },
+        ],
+        destination: "https://www.novaaetus.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

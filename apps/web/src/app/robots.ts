@@ -5,8 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/embed/"],
     },
-    sitemap: "https://novaaetus.com/sitemap.xml",
+    sitemap: "https://www.novaaetus.com/sitemap.xml",
   }
 }

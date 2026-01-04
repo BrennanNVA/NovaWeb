@@ -24,6 +24,9 @@ export async function generateMetadata({
   return {
     title: `Datasheet: ${dataset.title}`,
     description: dataset.summary,
+    alternates: {
+      canonical: `/reproducibility/datasheet/${dataset.slug}`,
+    },
   }
 }
 
@@ -216,6 +219,6 @@ function getCitationCode({
   return [
     `${title} (Nova Aetus).`,
     `Version date: ${updatedAt}.`,
-    `URL: https://novaaetus.com/research/${slug}.`,
+    `URL: https://www.novaaetus.com/research/${slug}.`,
   ].join("\n")
 }

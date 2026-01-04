@@ -24,9 +24,6 @@ export const metadata: Metadata = {
   },
   description: "AI-powered financial news, market insights, and quantitative research hub.",
   metadataBase: new URL("https://www.novaaetus.com"),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",

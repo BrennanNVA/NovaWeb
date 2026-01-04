@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "trigger-article.js",
+    "run_migration.js",
   ]),
 ]);
 

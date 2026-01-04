@@ -24,7 +24,7 @@ export default function ToolsPage() {
     ? [
         "import pandas as pd",
         "",
-        `url = \"https://novaaetus.com${datasetHref}\"`,
+        `url = \"https://www.novaaetus.com${datasetHref}\"`,
         "df = pd.read_csv(url)",
         "print(df.head())",
       ].join("\n")
@@ -34,14 +34,14 @@ export default function ToolsPage() {
     ? [
         "library(readr)",
         "",
-        `df <- read_csv(\"https://novaaetus.com${datasetHref}\")`,
+        `df <- read_csv(\"https://www.novaaetus.com${datasetHref}\")`,
         "head(df)",
       ].join("\n")
     : ""
 
   const javascriptCode = datasetHref
     ? [
-        `const res = await fetch(\"https://novaaetus.com${datasetHref}\")`,
+        `const res = await fetch(\"https://www.novaaetus.com${datasetHref}\")`,
         "const csv = await res.text()",
         "console.log(csv.split(\"\\n\").slice(0, 6).join(\"\\n\"))",
       ].join("\n")
@@ -49,7 +49,7 @@ export default function ToolsPage() {
 
   const shellCode = datasetHref
     ? [
-        `curl -L -o dataset.csv https://novaaetus.com${datasetHref}`,
+        `curl -L -o dataset.csv https://www.novaaetus.com${datasetHref}`,
         "",
         "# Preview the first 5 lines",
         "head -n 5 dataset.csv",
@@ -59,7 +59,7 @@ export default function ToolsPage() {
   const embedCode = datasetSlug
     ? [
         "<iframe",
-        `  src=\"https://novaaetus.com/embed/${datasetSlug}\"`,
+        `  src=\"https://www.novaaetus.com/embed/${datasetSlug}\"`,
         "  width=\"640\"",
         "  height=\"360\"",
         "  loading=\"lazy\"",

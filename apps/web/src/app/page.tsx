@@ -1,20 +1,14 @@
+import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Clock, Zap, BarChart3, Globe, FileText, Database, Newspaper, BookOpen, TrendingUp, TrendingDown, Minus } from "lucide-react"
+import { ArrowRight, Clock, Zap, BarChart3, Globe, FileText, Database, Newspaper, BookOpen } from "lucide-react"
 
 import { getPublishedArticles, type ArticleListItem } from "@/lib/articles"
 import { calculateReadingTime, formatReadingTime } from "@/lib/reading-time"
 
-interface StockScoreData {
-  overall: "buy" | "hold" | "sell"
-  score: number
-  confidence: "low" | "medium" | "high"
-  signals: Array<{
-    name: string
-    signal: "bullish" | "neutral" | "bearish"
-    weight: number
-    description: string
-  }>
-  summary: string
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
 }
 
 export default async function HomePage() {
@@ -29,6 +23,7 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <h1 className="sr-only">Nova Aetus</h1>
       {/* Breaking News Ticker */}
       {breakingNews.length > 0 && (
         <div className="mb-6 bg-negative/10 border border-negative/20 rounded-lg px-4 py-2 flex items-center gap-3 overflow-hidden">
@@ -253,27 +248,10 @@ function ArticleCard({ article, variant = "stock" }: { article: ArticleListItem;
   const bgColor = variant === "macro" ? "bg-accent-blue/10" : "bg-accent/10"
   
   // Extract stock score if available (temporarily disabled until database column is added)
-  const stockScore = null
-  const hasScore = false
   
   // Calculate read time from excerpt (fallback to title if no excerpt)
   const textToAnalyze = article.excerpt || article.title
   const readTime = formatReadingTime(calculateReadingTime(textToAnalyze))
-  
-  // Get rating icon and color
-  const getRatingDisplay = (rating: string) => {
-    switch (rating) {
-      case "buy":
-        return { icon: TrendingUp, color: "text-positive", bg: "bg-positive/10", label: "BUY" }
-      case "sell":
-        return { icon: TrendingDown, color: "text-negative", bg: "bg-negative/10", label: "SELL" }
-      default:
-        return { icon: Minus, color: "text-warning", bg: "bg-warning/10", label: "HOLD" }
-    }
-  }
-  
-  const ratingDisplay = null
-  const RatingIcon = null
   
   return (
     <article className="group border border-border rounded-lg p-4 hover:border-accent/30 transition-colors">

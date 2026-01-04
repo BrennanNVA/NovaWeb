@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 
 import { getDatasets } from "@/lib/datasets"
 
-const BASE_URL = "https://novaaetus.com"
+const BASE_URL = "https://www.novaaetus.com"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const datasets = getDatasets()
@@ -17,6 +17,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/news`,
       changeFrequency: "hourly",
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/markets`,
+      changeFrequency: "hourly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/analysis`,
+      changeFrequency: "hourly",
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/research`,

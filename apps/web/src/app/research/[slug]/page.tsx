@@ -24,6 +24,9 @@ export async function generateMetadata({
   return {
     title: dataset.title,
     description: dataset.summary,
+    alternates: {
+      canonical: `/research/${dataset.slug}`,
+    },
   }
 }
 
@@ -219,7 +222,7 @@ function getEmbedCode({
 }) {
   return [
     `<iframe`,
-    `  src="https://novaaetus.com${src}"`,
+    `  src="https://www.novaaetus.com${src}"`,
     `  width="${width}"`,
     `  height="${height}"`,
     `  loading="lazy"`,

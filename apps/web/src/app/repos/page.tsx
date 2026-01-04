@@ -122,7 +122,7 @@ function getEmbedCode({
 }) {
   return [
     "<iframe",
-    `  src=\"https://novaaetus.com/embed/${slug}\"`,
+    `  src=\"https://www.novaaetus.com/embed/${slug}\"`,
     `  width=\"${width}\"`,
     `  height=\"${height}\"`,
     "  loading=\"lazy\"",

@@ -21,6 +21,17 @@ export async function generateMetadata({
   return {
     title: `${dataset.title} (Embed)`,
     description: dataset.summary,
+    alternates: {
+      canonical: `/research/${dataset.slug}`,
+    },
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
   }
 }
 

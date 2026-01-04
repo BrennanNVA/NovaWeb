@@ -13,13 +13,13 @@ export function MarkdownRenderer({ content, className = "" }: MarkdownRendererPr
       <ReactMarkdown
         components={{
         h1: ({ children }) => (
-          <h1 className="text-2xl font-bold text-foreground mt-6 mb-4">{children}</h1>
+          <h2 className="text-2xl font-bold text-foreground mt-6 mb-4">{children}</h2>
         ),
         h2: ({ children }) => (
-          <h2 className="text-xl font-semibold text-foreground mt-6 mb-3">{children}</h2>
+          <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">{children}</h3>
         ),
         h3: ({ children }) => (
-          <h3 className="text-lg font-semibold text-foreground mt-4 mb-2">{children}</h3>
+          <h4 className="text-lg font-semibold text-foreground mt-4 mb-2">{children}</h4>
         ),
         p: ({ children }) => (
           <p className="text-foreground leading-7 mb-4">{children}</p>
