@@ -22,10 +22,15 @@ export async function POST(request: Request) {
   const providedSecret = getCronSecretFromRequest({ request })?.trim()
   
   if (!providedSecret || providedSecret !== expectedCronSecret) {
+    console.error(`[World News Cron] Unauthorized. Expected length: ${expectedCronSecret?.length}, Provided length: ${providedSecret?.length}`)
     return NextResponse.json(
       {
         ok: false,
         error: "Unauthorized",
+        debug: process.env.NODE_ENV === "development" ? {
+          expectedLen: expectedCronSecret?.length,
+          providedLen: providedSecret?.length,
+        } : undefined
       },
       { status: 401 },
     )
