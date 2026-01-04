@@ -3,7 +3,6 @@ import { revalidatePath } from "next/cache"
 
 import {
   createPublishedArticle,
-  getNextActiveTicker,
   touchTickerLastArticleAt,
 } from "@/lib/articles"
 import { generateArticleContent } from "@/lib/gemini"
@@ -12,7 +11,6 @@ import {
   getActiveTickersForBreakingNews,
   generateBreakingNewsTitle,
   generateBreakingNewsExcerpt,
-  type BreakingNewsEvent,
 } from "@/lib/breaking-news-detector"
 
 export const runtime = "nodejs"
@@ -61,6 +59,7 @@ export async function POST(request: Request) {
     
     for (const event of events.slice(0, 3)) { // Limit to top 3 events per run
       try {
+        console.log(`[Breaking News Cron] Processing event for ${event.symbol}: ${event.reason}`)
         const now = new Date()
         const publishedAt = now.toISOString()
         const slug = createBreakingNewsSlug({ symbol: event.symbol, now })
@@ -87,12 +86,14 @@ export async function POST(request: Request) {
           promptVersion: generated.promptVersion,
           marketSnapshot: event.marketData,
           sourceNews: event.marketData.news,
-          stockScore: generated.stockScore,
           publishedAt,
         })
 
+        console.log(`[Breaking News Cron] Created article: ${article.slug}`)
+
         await touchTickerLastArticleAt({ symbol: event.symbol, publishedAt })
         
+        console.log(`[Breaking News Cron] Purging cache for /, /news, /stocks/${event.symbol.toLowerCase()}`)
         revalidatePath("/")
         revalidatePath("/news")
         revalidatePath(`/stocks/${event.symbol.toLowerCase()}`)

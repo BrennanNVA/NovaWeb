@@ -69,6 +69,7 @@ export async function POST(request: Request) {
     }
 
     // Generate article from world news
+    console.log("[World News Cron] Generating world news article...")
     const generated = await generateWorldNewsArticle({ newsItems: uniqueNews })
 
     const now = new Date()
@@ -89,6 +90,9 @@ export async function POST(request: Request) {
       publishedAt: now.toISOString(),
     })
 
+    console.log(`[World News Cron] Created article: ${article.slug}`)
+
+    console.log("[World News Cron] Purging cache for /, /news")
     revalidatePath("/")
     revalidatePath("/news")
 

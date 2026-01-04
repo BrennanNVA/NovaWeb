@@ -56,7 +56,10 @@ export async function POST(request: Request) {
       now,
     })
 
+    console.log(`[Cron] Routine article count for today: ${count}/${MAX_ROUTINE_ARTICLES_PER_DAY}`)
+
     if (count >= MAX_ROUTINE_ARTICLES_PER_DAY) {
+      console.log(`[Cron] Daily cap reached (${MAX_ROUTINE_ARTICLES_PER_DAY}). Skipping routine article.`)
       return NextResponse.json({
         ok: true,
         skipped: true,
@@ -70,8 +73,10 @@ export async function POST(request: Request) {
   }
 
   const symbol = bodyResult.data.symbol ?? (await getNextActiveTicker()).symbol
+  console.log(`[Cron] Selected symbol: ${symbol}`)
 
   if (!symbol) {
+    console.log(`[Cron] No active symbols found. Skipping.`)
     return NextResponse.json({
       ok: true,
       skipped: true,
@@ -83,6 +88,8 @@ export async function POST(request: Request) {
     const publishedAt = now.toISOString()
     const slug = createArticleSlug({ symbol, now })
 
+    console.log(`[Cron] Generating article for ${symbol}...`)
+
     let title: string
     let excerpt: string
     let bodyMarkdown: string
@@ -90,7 +97,6 @@ export async function POST(request: Request) {
     let model: string | null = null
     let promptVersion: string = "v0"
     let marketSnapshot: MarketSnapshot | null = null
-    let stockScore: unknown = null
 
     const hasAlpacaKeys = process.env.ALPACA_API_KEY && process.env.ALPACA_API_SECRET
     const hasGeminiKey = process.env.GEMINI_API_KEY
@@ -111,15 +117,15 @@ export async function POST(request: Request) {
         tags = generated.tags
         model = generated.model
         promptVersion = generated.promptVersion
-        stockScore = generated.stockScore
       } catch (aiError) {
-        console.error("AI generation failed, falling back to placeholder:", aiError)
+        console.error(`[Cron] AI generation failed for ${symbol}:`, aiError)
         const date = publishedAt.slice(0, 10)
         title = `${symbol} Market Update — ${date}`
         excerpt = isBreaking ? `Breaking update for ${symbol}.` : `Routine market update for ${symbol}.`
         bodyMarkdown = buildPlaceholderMarkdown({ title, symbol, publishedAt, isBreaking })
       }
     } else {
+      console.warn(`[Cron] Missing API keys. Alpaca: ${!!hasAlpacaKeys}, Gemini: ${!!hasGeminiKey}`)
       const date = publishedAt.slice(0, 10)
       title = `${symbol} Market Update — ${date}`
       excerpt = isBreaking ? `Breaking update for ${symbol}.` : `Routine market update for ${symbol}.`
@@ -141,8 +147,11 @@ export async function POST(request: Request) {
       publishedAt: new Date().toISOString(),
     })
 
+    console.log(`[Cron] Article created successfully: ${article.slug}`)
+
     await touchTickerLastArticleAt({ symbol, publishedAt })
 
+    console.log(`[Cron] Purging cache for /, /news, /stocks/${symbol.toLowerCase()}`)
     revalidatePath("/")
     revalidatePath("/news")
     revalidatePath(`/stocks/${symbol.toLowerCase()}`)
@@ -161,6 +170,7 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error"
+    console.error(`[Cron] Generation process failed for ${symbol}:`, message)
 
     return NextResponse.json(
       {
@@ -172,7 +182,7 @@ export async function POST(request: Request) {
   }
 }
 
-const MAX_ROUTINE_ARTICLES_PER_DAY = 13
+const MAX_ROUTINE_ARTICLES_PER_DAY = 50
 
 const generateArticlesBodySchema = z.object({
   symbol: z.string().min(1).optional(),
