@@ -20,7 +20,22 @@ export default async function HomePage() {
   const breakingNews = articles.filter(a => a.is_breaking)
   const stockArticles = articles.filter(a => a.tickers && a.tickers.length > 0 && !a.tags?.includes("macro"))
   const macroArticles = articles.filter(a => a.tags?.includes("macro"))
-  const featuredArticle = breakingNews[0] ?? stockArticles[0] ?? articles[0] ?? null
+  
+  // Logic for featured article:
+  // 1. If there's a breaking news article less than 12 hours old, feature it.
+  // 2. Otherwise, feature the absolute latest article (routine or macro).
+  const latestArticle = articles[0] ?? null
+  const latestBreaking = breakingNews[0] ?? null
+  
+  let featuredArticle = latestArticle
+  if (latestBreaking) {
+    const breakingDate = new Date(latestBreaking.published_at)
+    const hoursOld = (new Date().getTime() - breakingDate.getTime()) / (1000 * 60 * 60)
+    if (hoursOld < 12) {
+      featuredArticle = latestBreaking
+    }
+  }
+
   const latestNews = articles.slice(0, 6)
 
   return (
