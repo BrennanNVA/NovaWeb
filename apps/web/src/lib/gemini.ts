@@ -3,7 +3,7 @@ import "server-only"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
 import type { MarketSnapshot } from "@/lib/alpaca"
-import { calculateStockScore, formatScoreForArticle, type StockScore } from "@/lib/stock-score"
+import type { StockScore } from "@/lib/stock-score"
 
 function getGeminiClient() {
   const apiKey = process.env.GEMINI_API_KEY
@@ -66,15 +66,21 @@ Key signals: Price momentum: NEUTRAL, Volume: NORMAL, Volatility: LOW
 ${newsContext || "No recent news available"}
 
 ## Instructions
-1. Write a professional, informative article about ${symbol}'s current market situation
-2. Include analysis of the price movement and any relevant news
-3. Reference the Nova Aetus rating and what it means for investors
-4. Keep the tone professional but accessible
-5. Article should be 400-600 words
+1. Write a comprehensive, professional article about ${symbol}'s current market situation
+2. Include detailed analysis of the price movement, trading volume, and any relevant news
+3. Reference the Nova Aetus rating and explain what it means for different types of investors
+4. Keep the tone professional but accessible to retail investors
+5. Article should be 800-1200 words - be thorough and detailed
 6. Use markdown formatting with headers (##), bullet points, and bold text where appropriate
 7. Do NOT include the title in the body - just the content
-8. Focus on facts and market analysis, avoid speculation
-9. Include a brief "What to Watch" section at the end
+8. Include these sections:
+   - Market Overview (current price action and context)
+   - Recent Developments (news and catalysts)
+   - Technical Analysis (support/resistance, trends)
+   - Fundamental Outlook (valuation, growth prospects)
+   - What to Watch (upcoming events, key levels)
+   - Investment Considerations (risks and opportunities)
+9. Focus on actionable insights and data-driven analysis
 
 ## Output Format
 Return ONLY a JSON object with this exact structure (no markdown code blocks):
@@ -156,13 +162,20 @@ ${topicInfo.name}: ${topicInfo.description}
 ${today}
 
 ## Instructions
-1. Write a professional macro analysis article about current ${topicInfo.name.toLowerCase()} trends
+1. Write a comprehensive macro analysis article about current ${topicInfo.name.toLowerCase()} trends
 2. Include relevant data points, recent developments, and market implications
 3. Keep the tone professional but accessible to retail investors
-4. Article should be 400-600 words
+4. Article should be 800-1200 words - be thorough and detailed
 5. Use markdown formatting with headers (##), bullet points, and bold text where appropriate
 6. Do NOT include the title in the body - just the content
-7. Focus on actionable insights and what investors should watch
+7. Include these sections:
+   - Current Situation (what's happening now)
+   - Key Data Points (relevant statistics and metrics)
+   - Market Impact (how this affects stocks, bonds, sectors)
+   - Historical Context (how this compares to past events)
+   - Expert Perspectives (what analysts are saying)
+   - What to Watch (upcoming events, key indicators)
+   - Investment Implications (actionable takeaways)
 8. Include both short-term and longer-term perspectives
 
 ## Output Format
