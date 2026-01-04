@@ -76,7 +76,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
 export function getStockLogoUrl({ ticker }: { ticker: string }): string | null {
   const domain = TICKER_TO_DOMAIN[ticker.toUpperCase()]
   if (!domain) return null
-  return `https://logo.clearbit.com/${domain}`
+  return `https://unavatar.io/${domain}?fallback=false`
 }
 
 export function getCategoryImageUrl({ tags }: { tags: string[] }): string {
