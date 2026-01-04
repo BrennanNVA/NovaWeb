@@ -1,7 +1,18 @@
+import Image from "next/image"
 import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, Building2 } from "lucide-react"
 
 import type { ArticleListItem } from "@/lib/articles"
+import { getStockLogoUrl } from "@/lib/stock-images"
+
+function getStockLogosForArticle({ tickers }: { tickers: string[] }): Array<{ ticker: string; url: string }> {
+  const logos: Array<{ ticker: string; url: string }> = []
+  for (const ticker of (tickers ?? []).slice(0, 3)) {
+    const url = getStockLogoUrl({ ticker })
+    if (url) logos.push({ ticker, url })
+  }
+  return logos
+}
 
 interface NewsArticleCardProps {
   article: ArticleListItem
@@ -14,6 +25,7 @@ export function NewsArticleCard({ article, size = "md", className = "" }: NewsAr
   const readTimeMinutes = getReadTimeMinutes({ title: article.title, excerpt: article.excerpt })
   const sentiment = getSentiment({ seed: article.slug })
   const sparkline = getSparkline({ seed: article.slug, tone: sentiment.tone })
+  const stockLogos = getStockLogosForArticle({ tickers: article.tickers })
 
   const density =
     size === "lg" ? "p-7" : size === "sm" ? "p-5" : "p-6"
@@ -87,6 +99,29 @@ export function NewsArticleCard({ article, size = "md", className = "" }: NewsAr
         </div>
 
         <div className="hidden shrink-0 flex-col items-end gap-3 sm:flex">
+          {stockLogos.length > 0 ? (
+            <div className="flex items-center gap-2">
+              {stockLogos.map(({ ticker, url }) => (
+                <div
+                  key={ticker}
+                  className="relative h-10 w-10 overflow-hidden rounded-xl border border-border-subtle bg-white p-1.5"
+                  title={ticker}
+                >
+                  <Image
+                    src={url}
+                    alt={`${ticker} logo`}
+                    fill
+                    className="object-contain"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-subtle bg-background/50">
+              <Building2 className="h-5 w-5 text-foreground-muted" aria-hidden="true" />
+            </div>
+          )}
           <div className="rounded-2xl border border-border-subtle bg-background/50 p-3">
             <svg
               viewBox={`0 0 ${sparkline.width} ${sparkline.height}`}
