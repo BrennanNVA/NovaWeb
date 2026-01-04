@@ -19,22 +19,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nova Aetus",
+    default: "Nova Aetus - AI-Powered Financial News & Market Intelligence",
     template: "%s | Nova Aetus",
   },
-  description: "AI-powered financial news, market insights, and quantitative research hub.",
+  description: "Get real-time AI-powered financial news, stock analysis, market insights, and quantitative research. Track breaking market events and make informed investment decisions.",
   metadataBase: new URL("https://www.novaaetus.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Nova Aetus",
-    title: "Nova Aetus - AI-Powered Financial Intelligence",
-    description: "AI-powered financial news, market insights, and quantitative research hub.",
+    title: "Nova Aetus - AI-Powered Financial News & Market Intelligence",
+    description: "Get real-time AI-powered financial news, stock analysis, market insights, and quantitative research. Track breaking market events and make informed investment decisions.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nova Aetus - AI-Powered Financial Intelligence",
-    description: "AI-powered financial news, market insights, and quantitative research hub.",
+    site: "@NovaAetus",
+    creator: "@NovaAetus",
+    title: "Nova Aetus - AI-Powered Financial News & Market Intelligence",
+    description: "Get real-time AI-powered financial news, stock analysis, market insights, and quantitative research. Track breaking market events and make informed investment decisions.",
   },
   robots: {
     index: true,
@@ -54,8 +56,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Nova Aetus",
+    url: "https://www.novaaetus.com",
+    logo: "https://www.novaaetus.com/logo.png",
+    description: "AI-powered financial news, market insights, and quantitative research hub.",
+    sameAs: [
+      "https://x.com/NovaAetus",
+      "https://www.facebook.com/profile.php?id=61585911006724",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      url: "https://www.novaaetus.com/about",
+    },
+  }
+
   return (
     <html lang="en" className="h-full dark">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <body
         className={`${inter.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >

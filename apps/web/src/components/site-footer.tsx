@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { AdsterraNativeBanner } from "@/components/adsterra-native-banner"
-import { Lock, Shield } from "lucide-react"
+import { Lock, Shield, Twitter, Facebook } from "lucide-react"
 
 export function SiteFooter() {
   const pathname = usePathname()
@@ -31,6 +31,28 @@ export function SiteFooter() {
               <Shield className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Secure Data</span>
             </div>
+          </div>
+          
+          {/* Social Links */}
+          <div className="flex items-center justify-center gap-4">
+            <a
+              href="https://x.com/NovaAetus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground-muted hover:text-foreground transition-colors"
+              aria-label="Follow us on X (Twitter)"
+            >
+              <Twitter className="h-5 w-5" aria-hidden="true" />
+            </a>
+            <a
+              href="https://www.facebook.com/profile.php?id=61585911006724"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground-muted hover:text-foreground transition-colors"
+              aria-label="Follow us on Facebook"
+            >
+              <Facebook className="h-5 w-5" aria-hidden="true" />
+            </a>
           </div>
           
           {/* Links */}
