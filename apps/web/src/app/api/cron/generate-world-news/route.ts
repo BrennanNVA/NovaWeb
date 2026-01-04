@@ -28,6 +28,18 @@ export async function POST(request: Request) {
     console.error(`[World News Cron] Unauthorized mismatch`)
     console.error(`[World News Cron] Expected length (clean): ${cleanExpected?.length}, Provided length (clean): ${cleanProvided?.length}`)
     
+    // Find exact mismatch position
+    if (cleanExpected && cleanProvided) {
+      for (let i = 0; i < Math.max(cleanExpected.length, cleanProvided.length); i++) {
+        if (cleanExpected[i] !== cleanProvided[i]) {
+          console.error(`[World News Cron] MISMATCH at position ${i}: expected char code ${cleanExpected.charCodeAt(i)}, got char code ${cleanProvided.charCodeAt(i)}`)
+          console.error(`[World News Cron] Expected around mismatch: "...${cleanExpected.slice(Math.max(0, i-3), i+4)}..."`)
+          console.error(`[World News Cron] Provided around mismatch: "...${cleanProvided.slice(Math.max(0, i-3), i+4)}..."`)
+          break
+        }
+      }
+    }
+    
     return NextResponse.json(
       {
         ok: false,

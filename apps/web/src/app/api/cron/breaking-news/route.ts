@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const providedSecret = request.headers.get("x-cron-secret")?.trim() || request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim()
+  const providedSecret = getCronSecretFromRequest({ request })
   
   if (!compareSecrets(providedSecret, expectedCronSecret)) {
     const cleanExpected = expectedCronSecret?.trim().replace(/^["']|["']$/g, "")
@@ -35,6 +35,18 @@ export async function POST(request: Request) {
 
     console.error(`[Breaking News Cron] Unauthorized mismatch`)
     console.error(`[Breaking News Cron] Expected length (clean): ${cleanExpected?.length}, Provided length (clean): ${cleanProvided?.length}`)
+    
+    // Find exact mismatch position
+    if (cleanExpected && cleanProvided) {
+      for (let i = 0; i < Math.max(cleanExpected.length, cleanProvided.length); i++) {
+        if (cleanExpected[i] !== cleanProvided[i]) {
+          console.error(`[Breaking News Cron] MISMATCH at position ${i}: expected char code ${cleanExpected.charCodeAt(i)}, got char code ${cleanProvided.charCodeAt(i)}`)
+          console.error(`[Breaking News Cron] Expected around mismatch: "...${cleanExpected.slice(Math.max(0, i-3), i+4)}..."`)
+          console.error(`[Breaking News Cron] Provided around mismatch: "...${cleanProvided.slice(Math.max(0, i-3), i+4)}..."`)
+          break
+        }
+      }
+    }
     
     return NextResponse.json(
       {
@@ -163,6 +175,19 @@ function createBreakingNewsSlug({ symbol, now }: { symbol: string; now: Date }) 
   const random = crypto.randomUUID().slice(0, 8)
 
   return `breaking-${safeSymbol}-${date}-${time}-${random}`
+}
+
+function getCronSecretFromRequest({ request }: { request: Request }) {
+  const headerValue = request.headers.get("x-cron-secret")
+  if (headerValue) return headerValue
+
+  const auth = request.headers.get("authorization")
+  if (!auth) return null
+
+  const match = auth.match(/^Bearer\s+(.+)$/i)
+  if (!match) return null
+
+  return match[1] ?? null
 }
 
 function compareSecrets(provided: string | null | undefined, expected: string | null | undefined): boolean {

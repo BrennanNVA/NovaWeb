@@ -28,6 +28,7 @@ export async function POST(request: Request) {
   }
 
   const providedSecret = getCronSecretFromRequest({ request })
+  
   if (!compareSecrets(providedSecret, expectedCronSecret)) {
     const cleanExpected = expectedCronSecret?.trim().replace(/^["']|["']$/g, "")
     const cleanProvided = providedSecret?.trim().replace(/^["']|["']$/g, "")
@@ -35,9 +36,21 @@ export async function POST(request: Request) {
     console.error(`[Macro Cron] Unauthorized mismatch`)
     console.error(`[Macro Cron] Expected length (clean): ${cleanExpected?.length}, Provided length (clean): ${cleanProvided?.length}`)
     
+    // Find exact mismatch position
+    if (cleanExpected && cleanProvided) {
+      for (let i = 0; i < Math.max(cleanExpected.length, cleanProvided.length); i++) {
+        if (cleanExpected[i] !== cleanProvided[i]) {
+          console.error(`[Macro Cron] MISMATCH at position ${i}: expected char code ${cleanExpected.charCodeAt(i)}, got char code ${cleanProvided.charCodeAt(i)}`)
+          console.error(`[Macro Cron] Expected around mismatch: "...${cleanExpected.slice(Math.max(0, i-3), i+4)}..."`)
+          console.error(`[Macro Cron] Provided around mismatch: "...${cleanProvided.slice(Math.max(0, i-3), i+4)}..."`)
+          break
+        }
+      }
+    }
+    
     return NextResponse.json(
-      { 
-        ok: false, 
+      {
+        ok: false,
         error: "Unauthorized",
         debug: {
           expectedLen: cleanExpected?.length,
@@ -48,7 +61,7 @@ export async function POST(request: Request) {
           providedLastChar: cleanProvided?.[cleanProvided.length - 1],
         }
       },
-      { status: 401 }
+      { status: 401 },
     )
   }
 
