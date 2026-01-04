@@ -1,6 +1,6 @@
 const https = require('https');
 
-const CRON_SECRET = 'M7BibyKPBHkmrUID1XRrMQTFp3N+GvQ0QZr56xfK1Fg=';
+const CRON_SECRET = 'M7BibyKPBHkmrUID1XRrMQTFp3N+GvQOQZr56xfKlF=';
 const ENDPOINTS = [
   '/api/cron/generate-articles',
   '/api/cron/generate-world-news',
