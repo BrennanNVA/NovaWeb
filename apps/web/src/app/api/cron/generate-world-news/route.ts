@@ -19,18 +19,27 @@ export async function POST(request: Request) {
     )
   }
 
-  const providedSecret = getCronSecretFromRequest({ request })?.trim()
+  const providedSecret = getCronSecretFromRequest({ request })
   
-  if (!providedSecret || providedSecret !== expectedCronSecret) {
-    console.error(`[World News Cron] Unauthorized. Expected length: ${expectedCronSecret?.length}, Provided length: ${providedSecret?.length}`)
+  if (!compareSecrets(providedSecret, expectedCronSecret)) {
+    const cleanExpected = expectedCronSecret?.trim().replace(/^["']|["']$/g, "")
+    const cleanProvided = providedSecret?.trim().replace(/^["']|["']$/g, "")
+
+    console.error(`[World News Cron] Unauthorized mismatch`)
+    console.error(`[World News Cron] Expected length (clean): ${cleanExpected?.length}, Provided length (clean): ${cleanProvided?.length}`)
+    
     return NextResponse.json(
       {
         ok: false,
         error: "Unauthorized",
-        debug: process.env.NODE_ENV === "development" ? {
-          expectedLen: expectedCronSecret?.length,
-          providedLen: providedSecret?.length,
-        } : undefined
+        debug: {
+          expectedLen: cleanExpected?.length,
+          providedLen: cleanProvided?.length,
+          expectedFirstChar: cleanExpected?.[0],
+          providedFirstChar: cleanProvided?.[0],
+          expectedLastChar: cleanExpected?.[cleanExpected.length - 1],
+          providedLastChar: cleanProvided?.[cleanProvided.length - 1],
+        }
       },
       { status: 401 },
     )
@@ -137,6 +146,15 @@ function getCronSecretFromRequest({ request }: { request: Request }) {
   if (!match) return null
 
   return match[1] ?? null
+}
+
+function compareSecrets(provided: string | null | undefined, expected: string | null | undefined): boolean {
+  if (!provided || !expected) return false
+  
+  const cleanProvided = provided.trim().replace(/^["']|["']$/g, "")
+  const cleanExpected = expected.trim().replace(/^["']|["']$/g, "")
+  
+  return cleanProvided === cleanExpected
 }
 
 function createWorldNewsSlug({ now }: { now: Date }) {
