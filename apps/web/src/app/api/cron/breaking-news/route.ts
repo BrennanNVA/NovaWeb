@@ -27,13 +27,18 @@ export async function POST(request: Request) {
     )
   }
 
-  const providedSecret = request.headers.get("x-cron-secret")?.trim()
+  const providedSecret = request.headers.get("x-cron-secret")?.trim() || request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim()
   
   if (!providedSecret || providedSecret !== expectedCronSecret) {
+    console.error(`[Breaking News Cron] Unauthorized. Expected length: ${expectedCronSecret?.length}, Provided length: ${providedSecret?.length}`)
     return NextResponse.json(
       {
         ok: false,
         error: "Unauthorized",
+        debug: process.env.NODE_ENV === "development" ? {
+          expectedLen: expectedCronSecret?.length,
+          providedLen: providedSecret?.length,
+        } : undefined
       },
       { status: 401 },
     )
