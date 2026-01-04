@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 
 import {
   createPublishedArticle,
@@ -92,6 +93,10 @@ export async function POST(request: Request) {
 
         await touchTickerLastArticleAt({ symbol: event.symbol, publishedAt })
         
+        revalidatePath("/")
+        revalidatePath("/news")
+        revalidatePath(`/stocks/${event.symbol.toLowerCase()}`)
+
         createdArticles.push({
           id: article.id,
           slug: article.slug,

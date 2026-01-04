@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 import { createPublishedArticle } from "@/lib/articles"
@@ -51,13 +52,11 @@ export async function POST(request: Request) {
     )
   }
 
-  const topic = bodyResult.data.topic ?? getRandomMacroTopic()
-  const now = new Date()
-
   try {
+    const topic = getRandomMacroTopic()
     const generated = await generateMacroArticle({ topic })
 
-    const publishedAt = now.toISOString()
+    const now = new Date()
     const slug = createMacroSlug({ topic, now })
 
     const { article } = await createPublishedArticle({
@@ -72,8 +71,12 @@ export async function POST(request: Request) {
       promptVersion: generated.promptVersion,
       marketSnapshot: null,
       sourceNews: null,
-      publishedAt,
+      publishedAt: now.toISOString(),
     })
+
+    revalidatePath("/")
+    revalidatePath("/news")
+    revalidatePath("/analysis")
 
     return NextResponse.json({
       ok: true,

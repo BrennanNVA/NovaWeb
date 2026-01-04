@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 import {
@@ -141,6 +142,10 @@ export async function POST(request: Request) {
     })
 
     await touchTickerLastArticleAt({ symbol, publishedAt })
+
+    revalidatePath("/")
+    revalidatePath("/news")
+    revalidatePath(`/stocks/${symbol.toLowerCase()}`)
 
     return NextResponse.json({
       ok: true,

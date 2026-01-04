@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 
 import { createPublishedArticle } from "@/lib/articles"
 import { fetchWorldBreakingNews, fetchTopHeadlines } from "@/lib/newsapi"
@@ -87,6 +88,9 @@ export async function POST(request: Request) {
       sourceNews: uniqueNews.slice(0, 5),
       publishedAt: now.toISOString(),
     })
+
+    revalidatePath("/")
+    revalidatePath("/news")
 
     return NextResponse.json({
       ok: true,
