@@ -5,6 +5,8 @@ import { ArrowRight, Clock, Zap, BarChart3, Globe, FileText, Database, Newspaper
 import { getPublishedArticles, type ArticleListItem } from "@/lib/articles"
 import { calculateReadingTime, formatReadingTime } from "@/lib/reading-time"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   alternates: {
     canonical: "/",

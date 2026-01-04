@@ -1,9 +1,11 @@
 import "server-only"
 
+import { unstable_noStore as noStore } from "next/cache"
 import { createPublicSupabaseClient } from "@/lib/supabase/public-client"
 import { createServiceSupabaseClient } from "@/lib/supabase/service-client"
 
 export async function getPublishedArticles({ limit, query, ticker }: GetPublishedArticlesArgs) {
+  noStore()
   if (limit <= 0) return { articles: [] }
 
   const supabase = createPublicSupabaseClient()
