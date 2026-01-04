@@ -4,6 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 
 import type { MarketSnapshot } from "@/lib/alpaca"
 import type { StockScore } from "@/lib/stock-score"
+import type { WorldNewsArticle } from "@/lib/newsapi"
 
 function getGeminiClient() {
   const apiKey = process.env.GEMINI_API_KEY
@@ -224,4 +225,87 @@ Make the title timely and specific to current market conditions.`
 export function getRandomMacroTopic(): MacroTopic {
   const topics = Object.keys(MACRO_TOPICS) as MacroTopic[]
   return topics[Math.floor(Math.random() * topics.length)]
+}
+
+export async function generateWorldNewsArticle({
+  newsItems,
+}: {
+  newsItems: WorldNewsArticle[]
+}): Promise<GeneratedArticle> {
+  const client = getGeminiClient()
+  const model = client.getGenerativeModel({ model: "gemini-2.0-flash" })
+
+  const today = new Date().toISOString().slice(0, 10)
+  
+  const newsContext = newsItems
+    .slice(0, 5)
+    .map((n, i) => `${i + 1}. "${n.title}" (${n.source}) - ${n.description || "No description"}`)
+    .join("\n")
+
+  const prompt = `You are a professional financial journalist writing for Nova Aetus, a fintech news platform. Write a comprehensive breaking news article based on the following top headlines.
+
+## Today's Date
+${today}
+
+## Top Headlines
+${newsContext}
+
+## Instructions
+1. Write a comprehensive news analysis article covering the most important story from the headlines
+2. Focus on the story with the biggest market or geopolitical impact
+3. Provide context, background, and analysis of implications
+4. Keep the tone professional but accessible
+5. Article should be 800-1200 words - be thorough and detailed
+6. Use markdown formatting with headers (##), bullet points, and bold text where appropriate
+7. Do NOT include the title in the body - just the content
+8. Include these sections:
+   - Breaking Development (what just happened)
+   - Background & Context (why this matters)
+   - Key Details (important facts and figures)
+   - Market Implications (how this affects investors)
+   - Expert Analysis (perspectives on the situation)
+   - What Happens Next (upcoming developments to watch)
+9. If the story involves geopolitics, military, or government actions, explain the broader implications
+
+## Output Format
+Return ONLY a JSON object with this exact structure (no markdown code blocks):
+{
+  "title": "Compelling breaking news headline",
+  "excerpt": "A 1-2 sentence summary for the article card",
+  "body": "The full article body in markdown format",
+  "tags": ["breaking-news", "relevant-category", "additional-tags"]
+}
+
+Make the title urgent and newsworthy. This is breaking news.`
+
+  const result = await model.generateContent(prompt)
+  const response = result.response
+  const text = response.text()
+
+  let parsed: { title: string; excerpt: string; body: string; tags: string[] }
+
+  try {
+    const cleanedText = text
+      .replace(/```json\n?/g, "")
+      .replace(/```\n?/g, "")
+      .trim()
+    
+    parsed = JSON.parse(cleanedText)
+  } catch {
+    parsed = {
+      title: "Breaking News Update",
+      excerpt: "Latest breaking news and developments.",
+      body: text,
+      tags: ["breaking-news"],
+    }
+  }
+
+  return {
+    title: parsed.title || "Breaking News Update",
+    excerpt: parsed.excerpt || "Latest breaking news and developments.",
+    bodyMarkdown: parsed.body || text,
+    tags: parsed.tags || ["breaking-news"],
+    model: "gemini-2.0-flash",
+    promptVersion: "v1-world-news",
+  }
 }
