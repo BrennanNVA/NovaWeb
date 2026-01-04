@@ -6,6 +6,7 @@ import { fetchWorldBreakingNews, fetchTopHeadlines } from "@/lib/newsapi"
 import { generateWorldNewsArticle } from "@/lib/gemini"
 
 export const runtime = "nodejs"
+export const maxDuration = 60 // 60 seconds
 
 export async function POST(request: Request) {
   const expectedCronSecret = process.env.CRON_SECRET?.trim()
