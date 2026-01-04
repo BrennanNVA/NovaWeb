@@ -29,14 +29,16 @@ export async function POST(request: Request) {
   
   if (!providedSecret || providedSecret !== expectedCronSecret) {
     console.error(`[Cron] Unauthorized. Expected length: ${expectedCronSecret?.length}, Provided length: ${providedSecret?.length}`)
+    console.error(`[Cron] Provided: "${providedSecret?.slice(0, 3)}...${providedSecret?.slice(-3)}"`)
+    console.error(`[Cron] Expected: "${expectedCronSecret?.slice(0, 3)}...${expectedCronSecret?.slice(-3)}"`)
     return NextResponse.json(
       {
         ok: false,
         error: "Unauthorized",
-        debug: process.env.NODE_ENV === "development" ? {
+        debug: {
           expectedLen: expectedCronSecret?.length,
           providedLen: providedSecret?.length,
-        } : undefined
+        }
       },
       { status: 401 },
     )
